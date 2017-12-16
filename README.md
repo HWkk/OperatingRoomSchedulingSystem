@@ -1,24 +1,10 @@
-# README
+#### Software Engineering project.
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+|        | 姓名   | 学号              |
+| ------ | ---- | --------------- |
+| **组长** | 张晨昕  |                 |
+| **组员** | 苏林刚  |                 |
+|        | 周家宏  |                 |
+|        | 叶星彤  |                 |
+|        | 康锴   | 201728015029008 |
 
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
