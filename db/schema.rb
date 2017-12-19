@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171216075325) do
+ActiveRecord::Schema.define(version: 20171218155753) do
 
   create_table "doctors", force: :cascade do |t|
     t.string "name"
@@ -18,15 +18,15 @@ ActiveRecord::Schema.define(version: 20171216075325) do
 
   create_table "night_schedules", force: :cascade do |t|
     t.date "date"
-    t.string "nurse1_id"
-    t.string "nurse2_id"
-    t.string "nurse3_id"
-    t.string "nurse4_id"
-    t.string "nurse5_id"
-    t.string "nurse6_id"
-    t.string "nurse7_id"
-    t.string "nurse8_id"
-    t.string "nurse9_id"
+    t.integer "nurse1_id"
+    t.integer "nurse2_id"
+    t.integer "nurse3_id"
+    t.integer "nurse4_id"
+    t.integer "nurse5_id"
+    t.integer "nurse6_id"
+    t.integer "nurse7_id"
+    t.integer "nurse8_id"
+    t.integer "nurse9_id"
   end
 
   create_table "nurses", force: :cascade do |t|
@@ -68,8 +68,6 @@ ActiveRecord::Schema.define(version: 20171216075325) do
     t.string "instrument_nurse_id"
     t.string "roving_nurse_id"
     t.string "remark"
-    t.index ["doctor_id"], name: "index_surgeries_on_doctor_id"
-    t.index ["patient_id"], name: "index_surgeries_on_patient_id"
   end
 
 end

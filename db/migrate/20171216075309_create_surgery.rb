@@ -5,12 +5,12 @@ class CreateSurgery < ActiveRecord::Migration[5.1]
     	t.string :time
     	t.integer :room
     	t.integer :table
-    	t.belongs_to :patient
+    	t.integer :patient_id
     	t.string :department
     	t.string :ward
     	t.string :surgery_name
     	t.string :anesthesia_method
-    	t.belongs_to :doctor
+    	t.intger :doctor_id
     	t.string :assistant
     	t.string :instrument_nurse_id
     	t.string :roving_nurse_id
