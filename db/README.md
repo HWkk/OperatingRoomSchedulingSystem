@@ -6,9 +6,9 @@
 
 |           列名            |    数据类型     | 是否主键 | 参考外键 |      备注      |
 | :---------------------: | :---------: | :--: | :--: | :----------: |
-|   nurse_id（rails自动生成）   | varchar(20) | yes  |  -   |              |
+|   nurse_id（rails自动生成）   |   integer   | yes  |  -   |              |
 |          name           | varchar(20) |  no  |  -   |              |
-|         gender          |   char(2)   |  no  |  -   |     男/女      |
+|         gender          | varchar(2)  |  no  |  -   |     男/女      |
 |        birthday         |    date     |  no  |  -   |              |
 |       id_card_num       | varchar(20) |  no  |  -   |     身份证号     |
 |      phone_number       | varchar(20) |  no  |  -   |              |
@@ -27,10 +27,10 @@
 
 |          列名           |    数据类型     | 是否主键 | 参考外键 |  备注  |
 | :-------------------: | :---------: | :--: | :--: | :--: |
-| patient_id（rails自动生成） | varchar(20) | yes  |  -   | 住院号  |
+| patient_id（rails自动生成） |   integer   | yes  |  -   | 住院号  |
 |         name          | varchar(20) |  no  |  -   |      |
 |        gender         |   char(2)   |  no  |  -   |      |
-|          age          |     int     |  no  |  -   |      |
+|          age          |   integer   |  no  |  -   |      |
 |          bed          | varchar(20) |  no  |  -   |  床位  |
 |       diagnosis       | varchar(40) |  no  |  -   |  诊断  |
 
@@ -40,7 +40,7 @@
 
 |          列名          |    数据类型     | 是否主键 | 参考外键 |  备注  |
 | :------------------: | :---------: | :--: | :--: | :--: |
-| doctor_id（rails自动生成） | varchar(20) | yes  |  -   |      |
+| doctor_id（rails自动生成） |   integer   | yes  |  -   |      |
 |         name         | varchar(20) |  no  |  -   |      |
 
 
@@ -49,12 +49,12 @@
 
 |          列名           |     数据类型     | 是否主键 |             参考外键              |        备注        |
 | :-------------------: | :----------: | :--: | :---------------------------: | :--------------: |
-| surgery_id（rails自动生成） | varchar(20)  | yes  |               -               |                  |
+| surgery_id（rails自动生成） |   integer    | yes  |               -               |                  |
 |         date          |     date     |  no  |               -               |                  |
 |         time          | varchar(20)  |  no  |               -               |  0830代表早上八点三十分   |
-|         room          |     int      |  no  |               -               |       手术间        |
-|         table         |     int      |  no  |               -               |       手术台        |
-|      patient_id       |     int      |  no  |      patient.patient_id       |       住院号        |
+|         room          |   integer    |  no  |               -               |       手术间        |
+|         table         |   integer    |  no  |               -               |       手术台        |
+|      patient_id       |   integer    |  no  |      patient.patient_id       |       住院号        |
 |      department       | varchar(20)  |  no  |               -               |        专科        |
 |         ward          | varchar(20)  |  no  |               -               | 病房（病房 + 专科 = 科室） |
 |     surgery_name      | varchar(50)  |  no  |               -               |                  |
@@ -75,16 +75,31 @@ nurse1-3是值班护士，nurse4-9是后备应急护士。
 | :--------------------------: | :---------: | :--: | :------------: | :--: |
 | night_schedule_id（rails自动生成） | varchar(20) | yes  |       -        |      |
 |             date             |    date     |  no  |       -        |      |
-|          nurse1_id           | varchar(20) |  no  | nurse.nurse_id |      |
-|          nurse2_id           | varchar(20) |  no  | nurse.nurse_id |      |
-|          nurse3_id           | varchar(20) |  no  | nurse.nurse_id |      |
-|          nurse4_id           | varchar(20) |  no  | nurse.nurse_id |      |
-|          nurse5_id           | varchar(20) |  no  | nurse.nurse_id |      |
-|          nurse6_id           | varchar(20) |  no  | nurse.nurse_id |      |
-|          nurse7_id           | varchar(20) |  no  | nurse.nurse_id |      |
-|          nurse8_id           | varchar(20) |  no  | nurse.nurse_id |      |
-|          nurse9_id           | varchar(20) |  no  | nurse.nurse_id |      |
+|          nurse1_id           |   integer   |  no  | nurse.nurse_id |      |
+|          nurse2_id           |   integer   |  no  | nurse.nurse_id |      |
+|          nurse3_id           |   integer   |  no  | nurse.nurse_id |      |
+|          nurse4_id           |   integer   |  no  | nurse.nurse_id |      |
+|          nurse5_id           |   integer   |  no  | nurse.nurse_id |      |
+|          nurse6_id           |   integer   |  no  | nurse.nurse_id |      |
+|          nurse7_id           |   integer   |  no  | nurse.nurse_id |      |
+|          nurse8_id           |   integer   |  no  | nurse.nurse_id |      |
+|          nurse9_id           |   integer   |  no  | nurse.nurse_id |      |
 
 
 
-### 
+### table6 : leave
+
+|         列名          |     数据类型     | 是否主键 |      参考外键      |   备注    |
+| :-----------------: | :----------: | :--: | :------------: | :-----: |
+| leave_id（rails自动生成） | varchar(20)  | yes  |       -        |         |
+|        date         |     date     |  no  |       -        |         |
+|      nurse_id       |   integer    |  no  | nurse.nurse_id |         |
+|       remark        | varchar(100) |  no  |                | 请假备注/缘由 |
+
+
+
+
+
+
+
+###  

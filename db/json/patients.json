@@ -1,0 +1,218 @@
+[
+  {
+    "gender" : "男",
+    "bed" : "37",
+    "hospitalized_number" : "1366236",
+    "id" : "1",
+    "age" : "52",
+    "diagnosis" : "三叉神经痛（右侧第1、2支）",
+    "name" : "<null>"
+  },
+  {
+    "gender" : "女",
+    "bed" : "39",
+    "hospitalized_number" : "1366353",
+    "id" : "2",
+    "age" : "30",
+    "diagnosis" : "面肌痉挛（右侧）",
+    "name" : "<null>"
+  },
+  {
+    "gender" : "男",
+    "bed" : "33",
+    "hospitalized_number" : "1366266",
+    "id" : "3",
+    "age" : "31",
+    "diagnosis" : "癫痫",
+    "name" : "<null>"
+  },
+  {
+    "gender" : "女",
+    "bed" : "44",
+    "hospitalized_number" : "1366840",
+    "id" : "4",
+    "age" : "48",
+    "diagnosis" : "慢性硬膜下血肿",
+    "name" : "<null>"
+  },
+  {
+    "gender" : "男",
+    "bed" : "49",
+    "hospitalized_number" : "1366190",
+    "id" : "5",
+    "age" : "39",
+    "diagnosis" : "重型颅脑外伤",
+    "name" : "<null>"
+  },
+  {
+    "gender" : "女",
+    "bed" : "54",
+    "hospitalized_number" : "1366992",
+    "id" : "6",
+    "age" : "39",
+    "diagnosis" : "面肌痉挛（右侧）",
+    "name" : "<null>"
+  },
+  {
+    "gender" : "女",
+    "bed" : "2",
+    "hospitalized_number" : "1366046",
+    "id" : "7",
+    "age" : "39",
+    "diagnosis" : "鞍区肿物（垂体瘤？）",
+    "name" : "<null>"
+  },
+  {
+    "gender" : "女",
+    "bed" : "7",
+    "hospitalized_number" : "1366117",
+    "id" : "8",
+    "age" : "57",
+    "diagnosis" : "鞍区肿物",
+    "name" : "<null>"
+  },
+  {
+    "gender" : "女",
+    "bed" : "28",
+    "hospitalized_number" : "1364424",
+    "id" : "9",
+    "age" : "1",
+    "diagnosis" : "四脑室占位",
+    "name" : "<null>"
+  },
+  {
+    "gender" : "女",
+    "bed" : "23",
+    "hospitalized_number" : "1365730",
+    "id" : "10",
+    "age" : "11",
+    "diagnosis" : "鞍区肿物（颅咽管瘤？）",
+    "name" : "<null>"
+  },
+  {
+    "gender" : "男",
+    "bed" : "11",
+    "hospitalized_number" : "1364504",
+    "id" : "11",
+    "age" : "53",
+    "diagnosis" : "颅内占位性病变（左侧额顶枕叶）",
+    "name" : "<null>"
+  },
+  {
+    "gender" : "男",
+    "bed" : "13",
+    "hospitalized_number" : "1363848",
+    "id" : "12",
+    "age" : "58",
+    "diagnosis" : "2型糖尿病",
+    "name" : "<null>"
+  },
+  {
+    "gender" : "女",
+    "bed" : "38",
+    "hospitalized_number" : "1365644",
+    "id" : "13",
+    "age" : "11",
+    "diagnosis" : "脊柱侧弯",
+    "name" : "<null>"
+  },
+  {
+    "gender" : "男",
+    "bed" : "27",
+    "hospitalized_number" : "1364658",
+    "id" : "14",
+    "age" : "71",
+    "diagnosis" : "固执破坏（颈椎）",
+    "name" : "<null>"
+  },
+  {
+    "gender" : "女",
+    "bed" : "16",
+    "hospitalized_number" : "1365782",
+    "id" : "15",
+    "age" : "51",
+    "diagnosis" : "（左侧CPA占位脑膜瘤？）",
+    "name" : "<null>"
+  },
+  {
+    "gender" : "女",
+    "bed" : "43",
+    "hospitalized_number" : "1366373",
+    "id" : "16",
+    "age" : "54",
+    "diagnosis" : "颅内占位性病变",
+    "name" : "<null>"
+  },
+  {
+    "gender" : "男",
+    "bed" : "51",
+    "hospitalized_number" : "1364746",
+    "id" : "17",
+    "age" : "74",
+    "diagnosis" : "骨盆肿瘤（左髋臼骨质破坏性质）",
+    "name" : "<null>"
+  },
+  {
+    "gender" : "男",
+    "bed" : "27",
+    "hospitalized_number" : "1207360",
+    "id" : "18",
+    "age" : "28",
+    "diagnosis" : "下肢恶性神经鞘瘤（右大腿）",
+    "name" : "<null>"
+  },
+  {
+    "gender" : "男",
+    "bed" : "25",
+    "hospitalized_number" : "1364411",
+    "id" : "19",
+    "age" : "34",
+    "diagnosis" : "股骨头无菌性坏死（右侧）",
+    "name" : "<null>"
+  },
+  {
+    "gender" : "男",
+    "bed" : "54",
+    "hospitalized_number" : "1362668",
+    "id" : "20",
+    "age" : "46",
+    "diagnosis" : "慢性骨髓炎（右下肢）",
+    "name" : "<null>"
+  },
+  {
+    "gender" : "男",
+    "bed" : "55",
+    "hospitalized_number" : "1366538",
+    "id" : "21",
+    "age" : "45",
+    "diagnosis" : "足背皮肤软组织缺损",
+    "name" : "<null>"
+  },
+  {
+    "gender" : "女",
+    "bed" : "1",
+    "hospitalized_number" : "1366966",
+    "id" : "22",
+    "age" : "57",
+    "diagnosis" : "盖氏骨折",
+    "name" : "<null>"
+  },
+  {
+    "gender" : "男",
+    "bed" : "18",
+    "hospitalized_number" : "1366870",
+    "id" : "23",
+    "age" : "52",
+    "diagnosis" : "股骨粗隆间骨折（右侧）",
+    "name" : "<null>"
+  },
+  {
+    "gender" : "男",
+    "bed" : "17",
+    "hospitalized_number" : "1364780",
+    "id" : "24",
+    "age" : "32",
+    "diagnosis" : "多发骨折",
+    "name" : "<null>"
+  }
+]
