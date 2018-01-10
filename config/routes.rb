@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
-  get 'nurses/show'
+  get 'nurses/show', to:"nurses#show"
+  get 'schedules/show', to:"schedules#show"
+  get 'surgeries/show', to:"surgeries#show"
+
 end

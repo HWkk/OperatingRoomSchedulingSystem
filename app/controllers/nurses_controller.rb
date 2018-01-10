@@ -3,6 +3,7 @@ class NursesController < ApplicationController
 
   def show
   	@nurses = Nurse.all
+  	#puts(@nurses.to_json)
   end
 
 end
