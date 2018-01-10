@@ -1,0 +1,11 @@
+<p>hello,rails!</p>
+<table>
+	<tbody>
+		<% for nurse in @nurses %>
+		<tr>
+			<td><%= nurse.id %></td>
+			<td><%= nurse.name %></td>
+		</tr>
+		<% end %>
+	</tbody>
+</table>

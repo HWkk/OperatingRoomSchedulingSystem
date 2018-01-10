@@ -1,7 +1,7 @@
 class CreateNightSchedule < ActiveRecord::Migration[5.1]
   def change
     create_table :night_schedules do |t|
-    	t.date :date
+			t.date :date
     	t.integer :nurse1_id
     	t.integer :nurse2_id
     	t.integer :nurse3_id
