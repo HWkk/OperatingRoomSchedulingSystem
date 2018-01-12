@@ -5,7 +5,7 @@
 import sys
 # path = "/Users/zhoujiahong/Jiahonglibs/z3-4.4.0-x64-osx-10.10.3/bin"
 # path = "/Users/zhoujiahong/Jiahonglibs/z3-4.6.0-x64-osx-10.11.6/bin/python/z3"
-path = "../bin/python/z3/z3.py"
+path = "../bin/python/z3/"
 sys.path.append(path)
 import z3
 import json
@@ -205,7 +205,7 @@ def matchDepartment(surgery, nurse) :
 # monthTable<type 'dict'>: <str(date), list(<list(ids of nurses)>)> list:[groupNumPerNight][nurseNumPerGroup]
 # clientTable<type 'dict'>: <str(date), dict(<str(id of surgery), list(ids of nurses)>)>, come from client
 # monthInfo list<number(weeks(1..4))[day(1..7)], come from client or generate by myself
-# surgeryTimeTable list<str(time), list(ids of surgery)>
+# surgeryTimeTable list<str(time), list(ids of surgeries)>
 def schedule(nurses, surgeries, monthTable, clientTable, monthInfo, surgeryTimeTable) :
 	solver = z3.Solver()
 	grid = dict()
@@ -323,6 +323,9 @@ def main() :
 	monthTable = scheduleMonthTable(nurses)
 	# # the table come from client
 	clientTable = getScheduleFromClient(surgeryTable, nurses, None)
+	with open ("../../db/json/clientTable.json", "w") as f :
+		json.dump(clientTable, f, skipkeys=False, ensure_ascii=False, check_circular=True, allow_nan=True, cls=None, indent=True, separators=None, encoding="utf-8", default=None, sort_keys=False)
+
 	monthInfo = None
 	surgeryTimeTable = None
 	result = schedule(nurses, surgeries, monthTable, clientTable, monthInfo, surgeryTimeTable)
@@ -331,6 +334,8 @@ def main() :
 		print "result is none"
 		return
 	# print result
+	with open ("../../db/json/result.json", "w") as f :
+		json.dump(result, f, skipkeys=False, ensure_ascii=False, check_circular=True, allow_nan=True, cls=None, indent=True, separators=None, encoding="utf-8", default=None, sort_keys=False)
 	for date in clientTable.keys() :
 		print date
 		dateTable = result[date]
