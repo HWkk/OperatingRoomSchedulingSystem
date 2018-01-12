@@ -11,6 +11,7 @@
 			<td>主治医生</td>
 			<td>器械护士</td>
 			<td>巡回护士</td>
+			<td>进行排班</td>
 		</tr>
 		<% for surgery in @surgeries %>
 			<tr>
@@ -33,7 +34,7 @@
 				<% else %>
 					<td>
 						<% for name in instrument_nurses %>
-							<%= "#{name}," %>
+							<%= "#{name} " %>
 						<% end %>
 					</td>
 				<% end %>
@@ -44,11 +45,11 @@
 				<% else %>
 					<td>
 						<% for name in roving_nurses %>
-							<%= "#{name}," %>
+							<%= "#{name} " %>
 						<% end %>
 					</td>
 				<% end %>
-
+				<td><a href="<%= surgeries_schedule_path %>?surgery_id=<%= surgery.id %>" >排班</a></td>
 			</tr>
 		<% end %>
 	</tbody>

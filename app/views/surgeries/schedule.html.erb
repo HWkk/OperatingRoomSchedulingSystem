@@ -1,0 +1,64 @@
+<table>
+	<tbody>
+		<tr>
+			<td>手术名称</td>
+			<td>手术开始时间</td>
+			<td>手术房间</td>
+			<td>床位</td>
+			<td>患者住院号</td>
+			<td>所属专科</td>
+			<td>麻醉方式</td>
+			<td>主治医生</td>
+			<td>器械护士</td>
+			<td>巡回护士</td>
+		</tr>
+		<tr>
+			<td><%= @surgery.surgery_name %></td>
+			<td><%= @surgery.time[0,2] %>:<%= @surgery.time[2,4] %></td>
+			<td><%= @surgery.room %></td>
+			<td><%= @surgery.table %></td>
+
+			<% patient = @surgery.getPatient(@surgery.patient_id) %>
+			<td><%= patient.hospitalized_number %></td>
+			<td><%= @surgery.department %></td>
+			<td><%= @surgery.anesthesia_method %></td>
+
+			<% doctor = @surgery.getDoctor(@surgery.doctor_id) %>
+			<td><%= doctor.name %></td>
+
+			<% instrument_nurses = @surgery.getNurses(@surgery.instrument_nurse_id) %>
+			<% if(instrument_nurses.length == 0) %>
+				<td>无</td>
+			<% else %>
+				<td>
+					<% for name in instrument_nurses %>
+						<%= "#{name} " %>
+					<% end %>
+				</td>
+			<% end %>
+					
+			<% roving_nurses = @surgery.getNurses(@surgery.roving_nurse_id) %>
+			<% if(roving_nurses.length == 0) %>
+				<td>无</td>
+			<% else %>
+				<td>
+					<% for name in roving_nurses %>
+						<%= "#{name} " %>
+					<% end %>
+				</td>
+			<% end %>
+		</tr>
+	</tbody>
+</table>
+
+<%= form_tag("addNurse", method: "post") do %>
+	<input name="surgery_id" type="hidden" value="<%= @surgery.id %>"></input>
+	<%= tag(:input, :type => "hidden", :name => request_forgery_protection_token.to_s, :value => form_authenticity_token) %> 
+	<% for nurse in @nurses %>
+		<input type="checkbox" name="nurse[]" value="<%= nurse.id %>">
+			<%= nurse.name %>
+		</input>
+	<% end %>
+	<p></p>
+  <%= submit_tag("提交") %>
+<% end %>

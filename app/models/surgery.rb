@@ -19,4 +19,6 @@ class Surgery < ApplicationRecord
 		end
 		return nurses
 	end
+
+	
 end
