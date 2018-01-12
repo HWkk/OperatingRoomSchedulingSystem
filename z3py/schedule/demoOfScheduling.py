@@ -173,7 +173,7 @@ def getScheduleFromClient(surgeryTable, nurses, nurseNumPerSurgeryForClient) :
 				nursesOneSurgery.append(str(ni))
 			surgeriesOneDay[surgeryID] = nursesOneSurgery
 		clientTable[date] = surgeriesOneDay
-	print clientTable
+	# print clientTable
 	return clientTable
 	pass
 
@@ -241,9 +241,25 @@ def schedule(nurses, surgeries, monthTable, clientTable, monthInfo, surgeryTimeT
 				# constraint: make sure all of the nurses come from client
 				solver.add(z3.Or(orListForDepartment))
 				nightAndDayNurses.append(value)
+				
 			# constraint: make sure nurses working for day are not working for night
 			solver.add(z3.Distinct(nightAndDayNurses))
+		# solver.add(z3.Eqel)
 			
+	# constraint: make sure the number of surgeries is limited by work hours
+	for nurseID in nurses.keys() :
+
+		for date in clientTable.keys() :
+			dayNursesConstraint = list()
+			for surgeryID in clientTable[date] :
+				for nurseType in nurseTypes :
+					value = grid[(date, surgeryID, nurseType)]
+					dayNursesConstraint.append((value == int(nurseID), 1))
+				#<type 'unicode'>
+			if nurses[nurseID].is_pregnant == "true":
+				solver.add(z3.PbLe(dayNursesConstraint, 1))
+			else :
+				solver.add(z3.PbLe(dayNursesConstraint, 1))
 
 	# # constraint: make sure nurses are different in the same time
 	# for surIDs in surgeryTimeTable :
@@ -270,17 +286,27 @@ def schedule(nurses, surgeries, monthTable, clientTable, monthInfo, surgeryTimeT
 		nightNurses = list()
 		for groupi in range (1, groupNumPerNight+1) :
 			for nuri in range (1, nurseNumPerGroup+1) :
-				nurseID = model[grid[(date, groupi, nuri)]].as_long()
+				nurseID = str(model[grid[(date, groupi, nuri)]].as_long())
 				nightNurses.append(nurseID)
 				# assert
-				assert str(nurseID) == monthTable[date][groupi-1][nuri-1]
+				assert nurseID == monthTable[date][groupi-1][nuri-1]
 		dateTable["night"] = nightNurses
 		dayTable = dict()
 		for surgeryID in clientTable[date] :
 			surgeryNurses = dict()
 			for nurseType in nurseTypes :
-				surgeryNurses[nurseType] = model[grid[date, surgeryID, nurseType]].as_long()
+				surgeryNurses[nurseType] = str(model[grid[date, surgeryID, nurseType]].as_long())
+				# print model[grid[date, surgeryID, nurseType]].as_long()
+				# print nurses[str(surgeryNurses[nurseType])].priority
+			# constraint: make sure the qualification of roving nurse is higher than instrument nurse
+			if nurses[surgeryNurses["instrument"]].priority > nurses[surgeryNurses["roving"]].priority :
+				temp = surgeryNurses["instrument"]
+				surgeryNurses["instrument"] = surgeryNurses["roving"]
+				surgeryNurses["roving"] = temp
+
+			assert nurses[surgeryNurses["instrument"]].priority <= nurses[surgeryNurses["roving"]].priority
 			dayTable[surgeryID] = surgeryNurses
+
 		dateTable["day"] = dayTable
 		result[date] = dateTable
 	return result
@@ -301,8 +327,10 @@ def main() :
 	surgeryTimeTable = None
 	result = schedule(nurses, surgeries, monthTable, clientTable, monthInfo, surgeryTimeTable)
 
-	print result
-	
+	if result == None :
+		print "result is none"
+		return
+	# print result
 	for date in clientTable.keys() :
 		print date
 		dateTable = result[date]
