@@ -5,14 +5,20 @@
 import sys
 # path = "/Users/zhoujiahong/Jiahonglibs/z3-4.4.0-x64-osx-10.10.3/bin"
 # path = "/Users/zhoujiahong/Jiahonglibs/z3-4.6.0-x64-osx-10.11.6/bin/python/z3"
-path = "../bin/python/z3/"
-sys.path.append(path)
+z3path = "../bin/python/z3/"
+# note: sys.path is the dictory for import python libs, find the libz3.dylib must use the PATH or Z3_LIB_DIRS
+sys.path.append(z3path)
+
+import __builtin__
+__builtin__.Z3_LIB_DIRS = ["../bin/"]
+
 import z3
 import json
 import random
 import Queue
 reload(sys)  # Python2.5 will delete sys.setdefaultencoding() while initialized environment, so we need reload agian
 sys.setdefaultencoding('utf8')
+
 
 nursesFileName = "../../db/json/nurses.json"
 surgeriesFileName = "../../db/json/surgeries.json"
