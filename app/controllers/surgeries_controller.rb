@@ -34,14 +34,11 @@ class SurgeriesController < ApplicationController
     render 'surgeries/show'
   end
 
-  def getScheduleResult(nurses, surgeries, monthTable, clientTable, monthInfo, surgeryTimeTable)
+  def getScheduleResult
       # TODO: 这里的参数暂时省略了,这些参数应该是从数据库中获取
-      # TODO: 暂时无逻辑，只返回虚拟结果
-    #   client_table_data_str = File.read('./app/tools/z3interface/clientTable.json')
-    #   surgery_time_data_str = File.read("./app/tools/z3interface/surgeryTimeTable.json")
-    #   Schedule.schedule(client_table_data_str,surgery_time_data_str)
-    result = File.read('./app/tools/z3interface/result.json')
-    return result
+      client_table_data_str = File.read('./app/tools/z3interface/clientTable.json')
+      surgery_time_data_str = File.read("./app/tools/z3interface/surgeryTimeTable.json")
+      Schedule.schedule(client_table_data_str,surgery_time_data_str)
   end
 
   def processDepartment(departments)

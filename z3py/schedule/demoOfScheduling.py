@@ -5,12 +5,18 @@
 import sys
 # path = "/Users/zhoujiahong/Jiahonglibs/z3-4.4.0-x64-osx-10.10.3/bin"
 # path = "/Users/zhoujiahong/Jiahonglibs/z3-4.6.0-x64-osx-10.11.6/bin/python/z3"
-z3path = "../bin/python/z3/"
+
+import os
+thisFilePath = os.path.split(os.path.realpath(__file__))[0]
+rootPath = thisFilePath[0:-13]
+
+z3path = rootPath + "z3py/bin/python/z3/"
 # note: sys.path is the dictory for import python libs, find the libz3.dylib must use the PATH or Z3_LIB_DIRS
 sys.path.append(z3path)
 
 import __builtin__
-__builtin__.Z3_LIB_DIRS = ["../bin/"]
+__builtin__.Z3_LIB_DIRS = [rootPath + "z3py/bin/"]
+
 
 import z3
 import json
@@ -20,8 +26,8 @@ reload(sys)  # Python2.5 will delete sys.setdefaultencoding() while initialized 
 sys.setdefaultencoding('utf8')
 
 
-nursesFileName = "../../db/json/nurses.json"
-surgeriesFileName = "../../db/json/surgeries.json"
+nursesFileName = rootPath + "db/json/nurses.json"
+surgeriesFileName = rootPath + "db/json/surgeries.json"
 
 
 nurseTypes = ["instrument", "roving"]
@@ -329,7 +335,7 @@ def main() :
 	monthTable = scheduleMonthTable(nurses)
 	# # the table come from client
 	clientTable = getScheduleFromClient(surgeryTable, nurses, None)
-	with open ("../../db/json/clientTable.json", "w") as f :
+	with open (rootPath + "db/json/clientTable.json", "w") as f :
 		json.dump(clientTable, f, skipkeys=False, ensure_ascii=False, check_circular=True, allow_nan=True, cls=None, indent=True, separators=None, encoding="utf-8", default=None, sort_keys=False)
 
 	monthInfo = None
@@ -340,7 +346,7 @@ def main() :
 		print "result is none"
 		return
 	# print result
-	with open ("../../db/json/result.json", "w") as f :
+	with open (rootPath + "db/json/result.json", "w") as f :
 		json.dump(result, f, skipkeys=False, ensure_ascii=False, check_circular=True, allow_nan=True, cls=None, indent=True, separators=None, encoding="utf-8", default=None, sort_keys=False)
 	for date in clientTable.keys() :
 		print date
