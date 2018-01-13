@@ -17,7 +17,6 @@ sys.path.append(z3path)
 import __builtin__
 __builtin__.Z3_LIB_DIRS = [rootPath + "z3py/bin/"]
 
-
 import z3
 import json
 import random
@@ -33,10 +32,6 @@ surgeriesFileName = rootPath + "db/json/surgeries.json"
 nurseTypes = ["instrument", "roving"]
 # initialize the global variables
 dayNumOfThisMonth = 30
-nurseNumPerDay = 4
-#for generating random integer 
-minNurseNumPerDay = 5
-maxNurseNumPerDay = 8
 # nurseNumPerClass is 3
 # but we never use the variable right now
 nurseNumPerGroup = 3
@@ -87,10 +82,22 @@ def getNurses(filename) :
 		nurse.__dict__ = nurseDict
 		nurses[nurse.id] = nurse
 		# print type(nurse.id)
+	for id in nurses.keys() :
+		nurse = nurses[id]
+		nurse.priority = 1
+		if nurse.qualification == "高" :
+			nurse.priority = 3
+		elif nurse.qualification == "中" :
+			nurse.priority = 2
+		elif nurse.qualification == "低" :
+			nurse.priority = 1
+		else :
+			sys.stderr.write("error qualification: " + nurse.qualification + "\n") 
+			# print nurse.qualification + " : error"
 	return nurses
 	pass
 
-# generate surgeries table by surgeries.json
+# generate nurses table by surgeries.json
 # return surgeries dict <str(id), Surgery>, dict <str(date), list(ids of surgeries)>
 def getSurgeries(filename) :
 	surgeriesFile = open(filename, "r")
@@ -110,36 +117,56 @@ def getSurgeries(filename) :
 	return surgeries, surgeryTable
 	pass
 
-
-def generateDate(day) :
-	if day < 10 :
-		date = "{0}-{1}-0{2}".format("2017", "12", day)
-	else :
-		date = "{0}-{1}-{2}".format("2017", "12", day)
-	return date
+# clientTable.json
+def getClientTable(filename) :
+	clientTableFile = open(filename, "r")
+	clientTableStr = clientTableFile.read()
+	clientTable = json.loads(clientTableStr)
+	return clientTable
 	pass
+
+# surgeryTimeTable.json
+def getSurgeryTimeTable(filename) :
+	surgeryTimeTableFile = open(filename, "r")
+	surgeryTimeTableStr = surgeryTimeTableFile.read()
+	surgeryTimeTable = json.loads(surgeryTimeTableStr)
+	return surgeryTimeTable
+	pass
+
+# monthInfo.json
+def getMonthInfo(filename) :
+	monthInfoFile = open(filename, "r")
+	monthInfoStr = monthInfoFile.read()
+	monthInfo = json.loads(monthInfoStr)
+	return monthInfo
+	pass
+
+def getMonthTable(filename) :
+	monthTableFile = open(filename, "r")
+	monthTableStr = monthTableFile.read()
+	monthTable = json.loads(monthTableStr)
+	return monthTable
+	pass
+
+# def generateDate(day) :
+# 	if day < 10 :
+# 		date = "{0}-{1}-0{2}".format("2017", "12", day)
+# 	else :
+# 		date = "{0}-{1}-{2}".format("2017", "12", day)
+# 	return date
+# 	pass
 
 
 # schedule for night of month
 # return monthTable<type 'dict'>: <str(date), list(<list(ids of nurses)>)> list:[groupNumPerNight][nurseNumPerGroup]
-def scheduleMonthTable(nurses) :
+def scheduleMonthTable(nurses, monthInfo) :
 	monthTable = dict()
 	nurseQueue = Queue.PriorityQueue()
 	for id in nurses.keys() :
 		nurse = nurses[id]
-		nurse.priority = 1
-		if nurse.qualification == "高" :
-			nurse.priority = 3
-		elif nurse.qualification == "中" :
-			nurse.priority = 2
-		elif nurse.qualification == "低" :
-			nurse.priority = 1
-		else :
-			sys.stderr.write("error qualification: " + nurse.qualification + "\n") 
-			# print nurse.qualification + " : error"
 		nurseQueue.put(nurse)
 	nurseQueueCopy = Queue.PriorityQueue()
-	for day in range(1, dayNumOfThisMonth+1) :
+	for day in range(1, len(monthInfo) + 1) :
 		# all groups on day i
 		groupsOneDay = list()
 		for j in range(groupNumPerNight) :
@@ -160,10 +187,9 @@ def scheduleMonthTable(nurses) :
 			# print nursesOneGroup
 			groupsOneDay.append(nursesOneGroup)
 		# print groupsOneDay
-		date = generateDate(day)
+		date = monthInfo[day-1]
 		# print date
 		monthTable[date] = groupsOneDay
-
 
 	# print monthTable
 	return monthTable
@@ -205,9 +231,6 @@ def getScheduleFromClient(surgeryTable, nurses, nurseNumPerSurgeryForClient) :
 # 	return nurseNums
 
 
-def getSurgeryTimeTable(surgeryTable):
-	pass
-
 # TODO 
 def matchDepartment(surgery, nurse) :
 	return True
@@ -217,7 +240,7 @@ def matchDepartment(surgery, nurse) :
 # surgeries<type 'dict'>: <str(id of surgery), Surgery> info of all surgeries, come from database
 # monthTable<type 'dict'>: <str(date), list(<list(ids of nurses)>)> list:[groupNumPerNight][nurseNumPerGroup]
 # clientTable<type 'dict'>: <str(date), dict(<str(id of surgery), list(ids of nurses)>)>, come from client
-# monthInfo dict<str(date),dict<str("week" or "day"), int(which week of this month or which day of this week)>> come from client or generate by myself
+# monthInfo list of dates
 # surgeryTimeTable list<str(time), list(ids of surgeries)>
 def schedule(nurses, surgeries, monthTable, clientTable, monthInfo, surgeryTimeTable) :
 	solver = z3.Solver()
@@ -286,10 +309,11 @@ def schedule(nurses, surgeries, monthTable, clientTable, monthInfo, surgeryTimeT
 
 	# check sat
 	if solver.check() != z3.sat :
-		print "unsat"
+		# print "unsat"
 		return None
 	else :
-		print "sat"
+		# print "sat"
+		pass
 	# get the model
 	
 	model = solver.model()
@@ -325,15 +349,74 @@ def schedule(nurses, surgeries, monthTable, clientTable, monthInfo, surgeryTimeT
 	return result
 	pass
 
+# input: 	./db/json/nurses.json
+# 			./db/json/monthInfo.json(排夜班至少要知道这个月有多少天)
+# output: 	./z3py/schedule/generate/nightResult.json
+def nightSchedule() :
+	nurses = getNurses(rootPath + "db/json/nurses.json")
+	monthInfo = getMonthInfo(rootPath + "db/json/monthInfo.json")
+	monthTable = scheduleMonthTable(nurses, monthInfo)
+	
+	# write monthTable to nightResult.json
+	nightResult = dict()
+	for day in range(1, len(monthTable)+1) :
+		date = monthInfo[day-1]
+		nightTable = dict()
+		nightNurses = list()
+		for groupi in range(groupNumPerNight) :
+			for nuri in range(nurseNumPerGroup) :
+				nightNurses.append(monthTable[date][groupi][nuri])
+		nightTable["night"] = nightNurses
+		nightResult[date] = nightTable
+	# import os
+	if os.path.isdir(rootPath + "z3py/generate/json/") :
+		pass
+	else :
+		os.makedirs(rootPath + "z3py/generate/json/")
+	with open (rootPath + "z3py/generate/json/nightResult.json", "w") as f :
+		json.dump(nightResult, f, skipkeys=False, ensure_ascii=False, check_circular=True, allow_nan=True, cls=None, indent=True, separators=None, encoding="utf-8", default=None, sort_keys=False)
+		print "Success: the result of nightSchedule has been written to \n\t[" + rootPath + "z3py/generate/json/nightResult.json]"
+	return nightResult
+	pass
 
-def main() :
-	monthInfo = list()
-	for day in range(1, dayNumOfThisMonth+1) :
-		date = generateDate(day)
-		monthInfo.append(date)
-	with open (rootPath + "db/json/monthInfo.json", "w") as f :
-		json.dump(monthInfo, f, skipkeys=False, ensure_ascii=False, check_circular=True, allow_nan=True, cls=None, indent=True, separators=None, encoding="utf-8", default=None, sort_keys=False)
 
+# input:	./db/json/nurses.json
+#			./db/json/surgeries.json(手术信息)
+# 		 	./db/json/clientTable.json
+# 			./db/json/monthTable.json
+# 		 	./db/json/surgeryTimeTable.json
+# 		 	./db/json/monthInfo.json(这里是想要周末日期信息，因为暂时没考虑这个，认为周末也是有手术的，故而暂不考虑，暂时保留，不一定需要)	
+# output:	./z3py/schedult/generate/nightResult.json		
+def daySchedule() :
+	nurses = getNurses(rootPath + "db/json/nurses.json")
+	surgeries, surgeryTable = getSurgeries(rootPath + "db/json/surgeries.json")
+	monthTable = getMonthTable(rootPath + "db/json/monthTable.json")
+	clientTable = getClientTable(rootPath + "db/json/clientTable.json")
+	monthInfo = getMonthInfo(rootPath + "db/json/monthInfo.json")
+	# surgeryTimeTable = getSurgeryTimeTable(rootPath + "db/json/surgeryTimeTable.json")
+	surgeryTimeTable = None
+
+	dayResult = schedule(nurses, surgeries, monthTable, clientTable, monthInfo, surgeryTimeTable)
+	
+	if dayResult is None :
+		print "Failure: unsat"
+		return None
+	# import os
+	if os.path.isdir(rootPath + "z3py/generate/json/") :
+		pass
+	else :
+		# os.mkdir(rootPath + "z3py/generate/json") can make one dir
+		# and the dir "z3py/generate/" is here before making dir
+		# but os.makedirs() can make dirs (contains z3py/generate/)
+		os.makedirs(rootPath + "z3py/generate/json/")
+	with open (rootPath + "z3py/generate/json/dayResult.json", "w") as f :
+		json.dump(dayResult, f, skipkeys=False, ensure_ascii=False, check_circular=True, allow_nan=True, cls=None, indent=True, separators=None, encoding="utf-8", default=None, sort_keys=False)
+		print "Success: the result of daySchedule has been written to \n\t[" + rootPath + "z3py/generate/json/dayResult.json]"
+	return dayResult
+	pass
+
+
+def demoOfScheduling() :
 	# nurses : contains info of all nurses
 	nurses = getNurses(nursesFileName)
 	surgeries, surgeryTable = getSurgeries(surgeriesFileName)
@@ -341,9 +424,6 @@ def main() :
 	# the table for night
 	# monthTable = getMonthTable()
 	monthTable = scheduleMonthTable(nurses)
-	with open (rootPath + "db/json/monthTable.json", "w") as f :
-		json.dump(monthTable, f, skipkeys=False, ensure_ascii=False, check_circular=True, allow_nan=True, cls=None, indent=True, separators=None, encoding="utf-8", default=None, sort_keys=False)
-
 	# # the table come from client
 	clientTable = getScheduleFromClient(surgeryTable, nurses, None)
 	with open (rootPath + "db/json/clientTable.json", "w") as f :
@@ -357,8 +437,8 @@ def main() :
 		print "result is none"
 		return
 	# print result
-	# with open (rootPath + "db/json/result.json", "w") as f :
-	# 	json.dump(result, f, skipkeys=False, ensure_ascii=False, check_circular=True, allow_nan=True, cls=None, indent=True, separators=None, encoding="utf-8", default=None, sort_keys=False)
+	with open (rootPath + "db/json/result.json", "w") as f :
+		json.dump(result, f, skipkeys=False, ensure_ascii=False, check_circular=True, allow_nan=True, cls=None, indent=True, separators=None, encoding="utf-8", default=None, sort_keys=False)
 	for date in clientTable.keys() :
 		print date
 		dateTable = result[date]
@@ -369,7 +449,14 @@ def main() :
 		for surgeryID in clientTable[date] :
 			print surgeryID, ": " , dayTable[surgeryID]
 	pass
+
+def main() :
+
+	nightResult = nightSchedule()
+	
+	dayResult = daySchedule()
 		
+	# print dayResult
 
 if __name__ == '__main__':
     main()
