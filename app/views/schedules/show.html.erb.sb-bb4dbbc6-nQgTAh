@@ -1,9 +1,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<meta http-equiv="Content-Type" contenttype="text/xml; charset=utf-8" />
+<meta http-equiv="Content-Type" contenttype="text/xml; charset=gb2312" />
 <html>
 <head>
 </head>
-
 <%= javascript_include_tag "jquery-1.8.2.min.js" %>
 <%= javascript_include_tag "jquery-ui.min1.9.1.js" %>
 <%= javascript_include_tag "jquery-ui-timepicker-addon.js" %>
@@ -21,34 +20,31 @@
 <%= stylesheet_link_tag "jquery-ui-timepicker-addon.css" %>
 
 
-
-
-<link href="../jquery/jquery-ui.css" rel="stylesheet" type="text/css" />
-<link href="css/mainstructure.css" rel="stylesheet" type="text/css" />
-<link href="css/maincontent.css" rel="stylesheet" type="text/css" />
-<link rel='stylesheet' type='text/css' href='cupertino/theme.css' />
-<link rel='stylesheet' type='text/css' href='../fullcalendar/fullcalendar.css' />
-<link rel='stylesheet' type='text/css' href='../fullcalendar/fullcalendar.print.css'
+<link href="/Users/megvii/software-engineering/OperatingRoomSchedulingSystem/app/views/schedules/Datemanagement/fullcalendar-1.5.4/jquery/jquery-ui.css" rel="stylesheet" type="text/css" />
+<link href="/Users/megvii/software-engineering/OperatingRoomSchedulingSystem/app/views/schedules/Datemanagement/fullcalendar-1.5.4/demos/css/mainstructure.css" rel="stylesheet" type="text/css" />
+<link href="/Users/megvii/software-engineering/OperatingRoomSchedulingSystem/app/views/schedules/Datemanagement/fullcalendar-1.5.4/demos/css/maincontent.css" rel="stylesheet" type="text/css" /><link rel='stylesheet' type='text/css' href='/Users/megvii/software-engineering/OperatingRoomSchedulingSystem/app/views/schedules/Datemanagement/fullcalendar-1.5.4/demos/cupertino/theme.css' />
+<link rel='stylesheet' type='text/css' href='/Users/megvii/software-engineering/OperatingRoomSchedulingSystem/app/views/schedules/Datemanagement/fullcalendar-1.5.4/fullcalendar/fullcalendar.css' />
+<link rel='stylesheet' type='text/css' href='/Users/megvii/software-engineering/OperatingRoomSchedulingSystem/app/views/schedules/Datemanagement/fullcalendar-1.5.4/fullcalendar/fullcalendar.print.css'
     media='print' />
-<script src="../jquery/jquery-1.8.2.min.js" type="text/javascript"></script>
+<script src="/Users/megvii/software-engineering/OperatingRoomSchedulingSystem/app/views/schedules/Datemanagement/fullcalendar-1.5.4/jquery/jquery-1.8.2.min.js" type="text/javascript"></script>
 <!--<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.2.min.js"></script>-->
-<script src="../jquery/jquery-ui.min1.9.1.js" type="text/javascript"></script>
-<!--     <script src="../jquery/jquery-ui-1.8.23.custom.min.js"></script>-->
-<!--<script src="../../devappwithfullcanlendar/js/jquery-ui-1.8.6.custom.min.js"></script>-->
-<script src="../../jQuery-Timepicker-Addon-master/jquery-ui-timepicker-addon.js"></script>
-<script src="../../jQuery-Timepicker-Addon-master/jquery-ui-sliderAccess.js"></script>
-<script src="../jquery/datepicker-zh.js" type="text/javascript"></script>
-<link href="../../jQuery-Timepicker-Addon-master/jquery-ui-timepicker-addon.css"
+<script src="/Users/megvii/software-engineering/OperatingRoomSchedulingSystem/app/views/schedules/Datemanagement/fullcalendar-1.5.4/jquery/jquery-ui.min1.9.1.js" type="text/javascript"></script>
+<!--     <script src="/Users/megvii/software-engineering/OperatingRoomSchedulingSystem/app/views/schedules/Datemanagement/jquery/jquery-ui-1.8.23.custom.min.js"></script>-->
+<!--<script src="/Users/megvii/software-engineering/OperatingRoomSchedulingSystem/app/views/schedules/Datemanagement/../devappwithfullcanlendar/js/jquery-ui-1.8.6.custom.min.js"></script>-->
+<script src="/Users/megvii/software-engineering/OperatingRoomSchedulingSystem/app/views/schedules/Datemanagement/jQuery-Timepicker-Addon-master/jquery-ui-timepicker-addon.js"></script>
+<script src="/Users/megvii/software-engineering/OperatingRoomSchedulingSystem/app/views/schedules/Datemanagement/jQuery-Timepicker-Addon-master/jquery-ui-sliderAccess.js"></script>
+<script src="/Users/megvii/software-engineering/OperatingRoomSchedulingSystem/app/views/schedules/Datemanagement/fullcalendar-1.5.4/jquery/datepicker-zh.js" type="text/javascript"></script>
+<link href="/Users/megvii/software-engineering/OperatingRoomSchedulingSystem/app/views/schedules/Datemanagement/jQuery-Timepicker-Addon-master/jquery-ui-timepicker-addon.css"
     rel="stylesheet" />
 <!--<link href="css/redmond/jquery-ui-1.8.1.custom.css" rel="stylesheet" type="text/css" />-->
-<script src="../fullcalendar/fullcalendar.js" type="text/javascript"></script>
-<!--<script type='text/javascript' src='../fullcalendar/fullcalendar.min.js'></script>-->
+<script src="/Users/megvii/software-engineering/OperatingRoomSchedulingSystem/app/views/schedules/Datemanagement/fullcalendar-1.5.4/fullcalendar/fullcalendar.js" type="text/javascript"></script>
+<!--<script type='text/javascript' src='/Users/megvii/software-engineering/OperatingRoomSchedulingSystem/app/views/schedules/Datemanagement/fullcalendar/fullcalendar.min.js'></script>-->
 <script type='text/javascript'>
 
     $(document).ready(function () {
 
         //  $("#hid").timepicker();
-        $("#start").timepicker({ dateFormat: 'yy-mm-dd', timeFormat: 'hh:mm', hourMin: 5, hourMax: 24, hourGrid: 3, minuteGrid: 15, timeText: '时间', hourText: '时', minuteText: '分', timeOnlyTitle: '选择时间', onClose: function (dateText, inst) {
+        $("#start").timepicker({ dateFormat: 'yy-mm-dd', timeFormat: 'hh:mm', hourMin: 5, hourMax: 24, hourGrid: 3, minuteGrid: 15, timeText: 'ʱ��', hourText: 'ʱ', minuteText: '��', timeOnlyTitle: 'ѡ��ʱ��', onClose: function (dateText, inst) {
             if ($('#start').val() != '') {
                 var testStartDate = $('#start').datetimepicker('getDate');
                 var testEndDate = $('#end').datetimepicker('getDate');
@@ -62,7 +58,7 @@
                 $('#end').datetimepicker('option', 'minDate', $('#end').datetimepicker('getDate'));
             }
         });
-        $("#end").datetimepicker({ dateFormat: 'yy-mm-dd', hourMin: 5, hourMax: 23, hourGrid: 3, minuteGrid: 15, timeText: '时间', hourText: '时', minuteText: '分', onClose: function (dateText, inst) {
+        $("#end").datetimepicker({ dateFormat: 'yy-mm-dd', hourMin: 5, hourMax: 23, hourGrid: 3, minuteGrid: 15, timeText: 'ʱ��', hourText: 'ʱ', minuteText: '��', onClose: function (dateText, inst) {
             if ($('#start').val() != '') {
                 var testStartDate = $('#start').datetimepicker('getDate');
                 var testEndDate = $("#end").datetimepicker('getDate');
@@ -91,21 +87,21 @@
                 right: 'month,agendaWeek,agendaDay'
             },
 
-            monthNames: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
-            monthNamesShort: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
-            dayNames: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"],
-            dayNamesShort: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"],
-            today: ["今天"],
+            monthNames: ["һ��", "����", "����", "����", "����", "����", "����", "����", "����", "ʮ��", "ʮһ��", "ʮ����"],
+            monthNamesShort: ["һ��", "����", "����", "����", "����", "����", "����", "����", "����", "ʮ��", "ʮһ��", "ʮ����"],
+            dayNames: ["����", "��һ", "�ܶ�", "����", "����", "����", "����"],
+            dayNamesShort: ["����", "��һ", "�ܶ�", "����", "����", "����", "����"],
+            today: ["����"],
             firstDay: 1,
             buttonText: {
-                today: '本月',
-                month: '月',
-                week: '周',
-                day: '日',
-                prev: '上一月',
-                next: '下一月'
+                today: '����',
+                month: '��',
+                week: '��',
+                day: '��',
+                prev: '��һ��',
+                next: '��һ��'
             },
-            viewDisplay: function (view) {//动态把数据查出，按照月份动态查询
+            viewDisplay: function (view) {//��̬�����ݲ���������·ݶ�̬��ѯ
                 var viewStart = $.fullCalendar.formatDate(view.start, "yyyy-MM-dd HH:mm:ss");
                 var viewEnd = $.fullCalendar.formatDate(view.end, "yyyy-MM-dd HH:mm:ss");
                 $("#calendar").fullCalendar('removeEvents');
@@ -116,10 +112,10 @@
                         $("#calendar").fullCalendar('renderEvent', term, true);
                     });
 
-                }); //把从后台取出的数据进行封装以后在页面上以fullCalendar的方式进行显示
+                }); //�ѴӺ�̨ȡ�������ݽ��з�װ�Ժ���ҳ������fullCalendar�ķ�ʽ������ʾ
             },
-            editable: true,//判断该日程能否拖动
-            dayClick: function (date, allDay, jsEvent, view) {//日期点击后弹出的jq ui的框，添加日程记录
+            editable: true,//�жϸ��ճ��ܷ��϶�
+            dayClick: function (date, allDay, jsEvent, view) {//���ڵ���󵯳���jq ui�Ŀ�����ճ̼�¼
 
                 var selectdate = $.fullCalendar.formatDate(date,"yyyy-MM-dd");
                 var arr = selectdate.split("-");
@@ -130,14 +126,13 @@
 
 
                 window.open("<%= surgeries_show_path %>?date=" + str)
-
             },
             titleFormat: "yyyyMMMMdddd",
             loading: function (bool) {
                 if (bool) $('#loading').show();
                 else $('#loading').hide();
             },
-            eventAfterRender: function (event, element, view) {//数据绑定上去后添加相应信息在页面上
+            eventAfterRender: function (event, element, view) {//���ݰ���ȥ�������Ӧ��Ϣ��ҳ����
                 var fstart = $.fullCalendar.formatDate(event.start, "HH:mm");
                 var fend = $.fullCalendar.formatDate(event.end, "HH:mm");
                 //element.html('<a href=#><div>Time: ' + fstart + "-" +  fend + '</div><div>Room:' + event.confname + '</div><div style=color:#E5E5E5>Host:' +  event.fullname + "</div></a>");
@@ -166,7 +161,7 @@
 //                    titlebg = titlebg + '<span class="fc-event-conf" style="background:#fff;top:0;right:15;color:#3974BC;font-weight:bold">R</span>';
 //                }
 
-                if (view.name == "month") {//按月份
+                if (view.name == "month") {//���·�
                     var evtcontent = '<div class="fc-event-vert"><a>';
                     evtcontent = evtcontent + confbg;
                     evtcontent = evtcontent + '<span class="fc-event-titlebg">' + fstart + " - " + fend + event.fullname + '</span>';
@@ -174,7 +169,7 @@
 //                    evtcontent = evtcontent + '<span>Host: ' + event.fullname + '</span>';
     //  evtcontent = evtcontent + '</a><div class="ui-resizable-handle ui-resizable-e"></div></div>';
                     element.html(evtcontent);
-                } else if (view.name == "agendaWeek") {//按周
+                } else if (view.name == "agendaWeek") {//����
                     var evtcontent = '<a>';
                     evtcontent = evtcontent + confbg;
                     evtcontent = evtcontent + '<span class="fc-event-time">' + fstart + "-" + fend  + '</span>';
@@ -182,7 +177,7 @@
                     //evtcontent = evtcontent + '<span>' +  event.fullname + '</span>';
          //  evtcontent = evtcontent + '</a><span class="ui-icon ui-icon-arrowthick-2-n-s"><div class="ui-resizable-handle ui-resizable-s"></div></span>';
                     element.html(evtcontent);
-                } else if (view.name == "agendaDay") {//按日
+                } else if (view.name == "agendaDay") {//����
                     var evtcontent = '<a>';
                     evtcontent = evtcontent + confbg;
                     evtcontent = evtcontent + '<span class="fc-event-time">' + fstart + " - " + fend +  '</span>';
@@ -196,7 +191,7 @@
             eventMouseover: function (calEvent, jsEvent, view) {
                 var fstart = $.fullCalendar.formatDate(calEvent.start, "yyyy/MM/dd HH:mm");
                 var fend = $.fullCalendar.formatDate(calEvent.end, "yyyy/MM/dd HH:mm");
-                $(this).attr('title', fstart + " - " + fend + " " + "标题" + " : " + calEvent.title);
+                $(this).attr('title', fstart + " - " + fend + " " + "����" + " : " + calEvent.title);
                 $(this).css('font-weight', 'normal');
                 $(this).tooltip({
                     effect: 'toggle',
@@ -213,9 +208,9 @@
                 $("#end").datetimepicker('setDate', event.end);
 
 
-                $("#title").val(event.title); //标题
-                $("#details").val(event.description); //内容
-                $("#chengdu").val(event.confname); //重要程度
+                $("#title").val(event.title); //����
+                $("#details").val(event.description); //����
+                $("#chengdu").val(event.confname); //��Ҫ�̶�
 
 
 
@@ -231,28 +226,28 @@
                         //$.validationEngine.closePrompt("#meeting");
                         //$.validationEngine.closePrompt("#start");
                         //$.validationEngine.closePrompt("#end");
-                        $("#start").val(''); //开始时间
-                        $("#end").val(''); //结束时间
-                        $("#title").val(''); //标题
-                        $("#details").val(''); //内容
-                        $("#chengdu").val(''); //重要程度
+                        $("#start").val(''); //��ʼʱ��
+                        $("#end").val(''); //����ʱ��
+                        $("#title").val(''); //����
+                        $("#details").val(''); //����
+                        $("#chengdu").val(''); //��Ҫ�̶�
                     },
                     timeFormat: 'HH:mm{ - HH:mm}',
 
                     buttons: {
-                        "删除": function () {
-                            var aa = window.confirm("警告：确定要删除记录，删除后无法恢复！");
+                        "ɾ��": function () {
+                            var aa = window.confirm("���棺ȷ��Ҫɾ����¼��ɾ�����޷��ָ���");
                             if (aa) {
                                 var para = { id: event.id };
 
 
                                 $.ajax({
-                                    type: "POST", //使用post方法访问后台
+                                    type: "POST", //ʹ��post�������ʺ�̨
 
-                                    url: "../../sr/removedate.ashx", //要访问的后台地址
-                                    data: para, //要发送的数据
+                                    url: "../../sr/removedate.ashx", //Ҫ���ʵĺ�̨��ַ
+                                    data: para, //Ҫ���͵�����
                                     success: function (data) {
-                                        //对话框里面的数据提交完成，data为操作结果
+                                        //�Ի�������������ύ��ɣ�dataΪ�������
 
 
                                         $('#calendar').fullCalendar('removeEvents', event.id);
@@ -266,11 +261,11 @@
                         },
                         "reserve": function () {
 
-                            var startdatestr = $("#start").val(); //开始时间
-                            var enddatestr = $("#end").val(); //结束时间
-                            var confid = $("#title").val(); //标题
-                            var det = $("#details").val(); //内容
-                            var cd = $("#chengdu").val(); //重要程度
+                            var startdatestr = $("#start").val(); //��ʼʱ��
+                            var enddatestr = $("#end").val(); //����ʱ��
+                            var confid = $("#title").val(); //����
+                            var det = $("#details").val(); //����
+                            var cd = $("#chengdu").val(); //��Ҫ�̶�
                             var startdate = $.fullCalendar.parseDate(selectdate + "T" + startdatestr);
                             var enddate = $.fullCalendar.parseDate(enddatestr);
 
@@ -283,11 +278,12 @@
 
                             var schdata = { title: confid, fullname: confid, description: det, confname: cd, confshortname: 'M1', start: selectdate + ' ' + startdatestr, end: enddatestr, id: event.id };
                             $.ajax({
-                                type: "POST", //使用post方法访问后台
-                                url: "../../sr/Updateinfo.ashx", //要访问的后台地址
-                                data: schdata, //要发送的数据
+                                type: "POST", //ʹ��post�������ʺ�̨
+
+                                url: "../../sr/Updateinfo.ashx", //Ҫ���ʵĺ�̨��ַ
+                                data: schdata, //Ҫ���͵�����
                                 success: function (data) {
-                                    //对话框里面的数据提交完成，data为操作结果
+                                    //�Ի�������������ύ��ɣ�dataΪ�������
 
                                     var schdata2 = { title: confid, fullname: confid, description: det, confname: cd, confshortname: 'M1', start: selectdate + ' ' + startdatestr, end: enddatestr, id: event.id };
                                     $('#calendar').fullCalendar('updateEvent', event);
@@ -472,27 +468,27 @@
                 &nbsp;</div>
             <div class="rowElem">
                 <label>
-                    标题:</label>
+                    ����:</label>
                 <input id="title" name="start">
             </div>
             <div class="rowElem">
                 <label>
-                    重要程度:</label>
+                    ��Ҫ�̶�:</label>
                 <input id="chengdu" name="start">
             </div>
             <div class="rowElem">
                 <label>
-                    开始时间:</label>
+                    ��ʼʱ��:</label>
                 <input id="start" name="start">
             </div>
             <div class="rowElem">
                 <label>
-                    结束时间:</label>
+                    ����ʱ��:</label>
                 <input id="end" name="end">
             </div>
             <div class="rowElem">
                 <label>
-                    备忘内容:</label>
+                    ��������:</label>
                 <textarea id="details" rows="3" cols="43" name="details"></textarea>
             </div>
             <div class="rowElem">

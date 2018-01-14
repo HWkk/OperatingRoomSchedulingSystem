@@ -12,3 +12,18 @@ Rails.application.config.assets.paths << Rails.root.join('node_modules')
 # application.js, application.css, and all non-JS/CSS in the app/assets
 # folder are already added.
 # Rails.application.config.assets.precompile += %w( admin.js admin.css )
+Rails.application.config.assets.precompile += %w( jquery-ui.css )
+
+Rails.application.config.assets.precompile += %w( mainstructure.css )
+
+Rails.application.config.assets.precompile += %w( maincontent.css )
+Rails.application.config.assets.precompile += %w( theme.css )
+Rails.application.config.assets.precompile += %w( jquery-ui-timepicker-addon.css )
+Rails.application.config.assets.precompile += %w( fullcalendar.css )
+Rails.application.config.assets.precompile += %w( fullcalendar.print.css )
+Rails.application.config.assets.precompile += %w( jquery-1.8.2.min.js )
+Rails.application.config.assets.precompile += %w( jquery-ui-timepicker-addon.js )
+Rails.application.config.assets.precompile += %w( jquery-ui-sliderAccess.js )
+Rails.application.config.assets.precompile += %w( datepicker-zh.js )
+Rails.application.config.assets.precompile += %w( fullcalendar.js )
+Rails.application.config.assets.precompile += %w( jquery-ui.min1.9.1.js )
