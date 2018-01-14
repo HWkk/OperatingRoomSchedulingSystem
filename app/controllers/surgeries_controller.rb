@@ -30,6 +30,22 @@ class SurgeriesController < ApplicationController
     # if(true)
     #   surgery.update(instrument_nurse_id: instrument_nurse_id, roving_nurse_id: roving_nurse_id)
     # end
+
+    nurses = Nurse.all
+    for nurse in nurses 
+      nurse.department = processDepartment(nurse.department)
+      nurse.is_experienced = processDepartment(nurse.is_experienced)
+    end
+
+    puts(nurses.to_json)
+
+    nursesJson = File.new("./db/json/nurses.json", "w")
+    if nursesJson
+      nursesJson.syswrite(nurses.to_json)
+    else
+      puts "Unable to open file!"
+    end
+
     @surgeries = Surgery.where(date: surgery.date)
     render 'surgeries/show'
   end
@@ -46,7 +62,8 @@ class SurgeriesController < ApplicationController
     result = Array.new()
     while index < 14
       if(departments[index] == "1")
-        result.push(Department.find(index + 1))
+        d = Department.find(index + 1)
+        result.push(d.name)
       end
       index = index + 1
     end
