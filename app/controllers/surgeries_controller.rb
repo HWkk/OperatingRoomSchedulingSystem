@@ -32,19 +32,23 @@ class SurgeriesController < ApplicationController
     # end
 
     nurses = Nurse.all
+    time = Time.now
+
     for nurse in nurses 
       nurse.department = processDepartment(nurse.department)
       nurse.is_experienced = processDepartment(nurse.is_experienced)
+      nurse.birthday = time.year.to_i - nurse.birthday.to_s()[0, 5].to_i
     end
-
-    puts(nurses.to_json)
 
     nursesJson = File.new("./db/json/nurses.json", "w")
     if nursesJson
       nursesJson.syswrite(nurses.to_json)
-    else
-      puts "Unable to open file!"
     end
+
+    # File.new("./db/json/doctors.json", "w").syswrite(Doctor.all.to_json)
+    # File.new("./db/json/patients.json", "w").syswrite(Patient.all.to_json)
+    # File.new("./db/json/surgeries.json", "w").syswrite(Surgery.all.to_json)
+    # File.new("./db/json/departments.json", "w").syswrite(Department.all.to_json)
 
     @surgeries = Surgery.where(date: surgery.date)
     render 'surgeries/show'
