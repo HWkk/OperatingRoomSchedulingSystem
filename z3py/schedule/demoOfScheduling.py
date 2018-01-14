@@ -32,7 +32,7 @@ surgeriesFileName = rootPath + "db/json/surgeries.json"
 
 nurseTypes = ["instrument", "roving"]
 # initialize the global variables
-dayNumOfThisMonth = 30
+dayNumOfThisMonth = 31
 nurseNumPerDay = 4
 #for generating random integer 
 minNurseNumPerDay = 5
@@ -85,6 +85,7 @@ def getNurses(filename) :
 	for nurseDict in nursesDict :
 		nurse = Nurse()
 		nurse.__dict__ = nurseDict
+		nurse.id = str(nurse.id)
 		nurses[nurse.id] = nurse
 		# print type(nurse.id)
 	return nurses
@@ -101,6 +102,7 @@ def getSurgeries(filename) :
 	for surgeryDict in surgeriesDict :
 		surgery = Surgery()
 		surgery.__dict__ = surgeryDict
+		surgery.id = str(surgery.id)
 		surgeries[surgery.id] = surgery
 		if surgeryTable.has_key(surgery.date) is not True:
 			surgeryTable[surgery.date] = list()
