@@ -42,14 +42,14 @@ class SurgeriesController < ApplicationController
 
     # nursesJson = File.new("./db/json/nurses.json", "w")
     # if nursesJson
-    #   nursesJson.syswrite(nurses.to_json)
+    #   nursesJson.syswrite(JSON.pretty_generate(nurses.as_json))
     # end
 
-    # File.new("./db/json/doctors.json", "w").syswrite(Doctor.all.to_json)
-    # File.new("./db/json/patients.json", "w").syswrite(Patient.all.to_json)
-    # File.new("./db/json/surgeries.json", "w").syswrite(Surgery.all.to_json)
-    # File.new("./db/json/leaves.json", "w").syswrite(Leave.all.to_json)
-    # File.new("./db/json/departments.json", "w").syswrite(Department.all.to_json)
+    # File.new("./db/json/doctors.json", "w").syswrite(JSON.pretty_generate(Doctor.all.as_json))
+    # File.new("./db/json/patients.json", "w").syswrite(JSON.pretty_generate(Patient.all.as_json))
+    # File.new("./db/json/surgeries.json", "w").syswrite(JSON.pretty_generate(Surgery.all.as_json))
+    # File.new("./db/json/leaves.json", "w").syswrite(JSON.pretty_generate(Leave.all.as_json))
+    # File.new("./db/json/departments.json", "w").syswrite(JSON.pretty_generate(Department.all.as_json))
 
     @surgeries = Surgery.where(date: surgery.date)
     render 'surgeries/show'

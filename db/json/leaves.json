@@ -1,1 +1,44 @@
-[{"id":1,"date":"2017-12-01","nurse_id":3,"remark":"旅游"},{"id":2,"date":"2017-12-02","nurse_id":9,"remark":null},{"id":3,"date":"2017-12-03","nurse_id":46,"remark":null},{"id":4,"date":"2017-12-04","nurse_id":34,"remark":null},{"id":5,"date":"2017-12-05","nurse_id":22,"remark":null},{"id":6,"date":"2017-12-06","nurse_id":18,"remark":null},{"id":7,"date":"2017-12-07","nurse_id":51,"remark":null}]
+[
+  {
+    "id": 1,
+    "date": "2017-12-01",
+    "nurse_id": 3,
+    "remark": "旅游"
+  },
+  {
+    "id": 2,
+    "date": "2017-12-02",
+    "nurse_id": 9,
+    "remark": null
+  },
+  {
+    "id": 3,
+    "date": "2017-12-03",
+    "nurse_id": 46,
+    "remark": null
+  },
+  {
+    "id": 4,
+    "date": "2017-12-04",
+    "nurse_id": 34,
+    "remark": null
+  },
+  {
+    "id": 5,
+    "date": "2017-12-05",
+    "nurse_id": 22,
+    "remark": null
+  },
+  {
+    "id": 6,
+    "date": "2017-12-06",
+    "nurse_id": 18,
+    "remark": null
+  },
+  {
+    "id": 7,
+    "date": "2017-12-07",
+    "nurse_id": 51,
+    "remark": null
+  }
+]
