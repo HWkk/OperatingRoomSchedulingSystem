@@ -31,7 +31,6 @@ surgeriesFileName = rootPath + "db/json/surgeries.json"
 
 nurseTypes = ["instrument", "roving"]
 # initialize the global variables
-dayNumOfThisMonth = 30
 # nurseNumPerClass is 3
 # but we never use the variable right now
 nurseNumPerGroup = 3
@@ -80,6 +79,8 @@ def getNurses(filename) :
 	for nurseDict in nursesDict :
 		nurse = Nurse()
 		nurse.__dict__ = nurseDict
+		# convert surgery.id to string
+		nurse.id = str(nurse.id)
 		nurses[nurse.id] = nurse
 		# print type(nurse.id)
 	for id in nurses.keys() :
@@ -108,6 +109,8 @@ def getSurgeries(filename) :
 	for surgeryDict in surgeriesDict :
 		surgery = Surgery()
 		surgery.__dict__ = surgeryDict
+		# convert surgery.id to string
+		surgery.id = str(surgery.id)
 		surgeries[surgery.id] = surgery
 		if surgeryTable.has_key(surgery.date) is not True:
 			surgeryTable[surgery.date] = list()
@@ -125,11 +128,16 @@ def getClientTable(filename) :
 	return clientTable
 	pass
 
-# surgeryTimeTable.json
-def getSurgeryTimeTable(filename) :
-	surgeryTimeTableFile = open(filename, "r")
-	surgeryTimeTableStr = surgeryTimeTableFile.read()
-	surgeryTimeTable = json.loads(surgeryTimeTableStr)
+
+def getSurgeryTimeTable(surgeries) :
+	surgeryTimeTable = dict()
+	for surgery in surgeries :
+		if surgeryTimeTable[surgery.time] == None :
+			surgeryTimeTable[surgery.time] = list()
+		surgeryTimeTable[surgery.time].append()
+	# surgeryTimeTableFile = open(filename, "r")
+	# surgeryTimeTableStr = surgeryTimeTableFile.read()
+	# surgeryTimeTable = json.loads(surgeryTimeTableStr)
 	return surgeryTimeTable
 	pass
 
@@ -148,6 +156,18 @@ def getMonthTable(filename) :
 	return monthTable
 	pass
 
+# leaves.json
+def getLeaveTable(filename) :
+	LeaveTableFile = open(filename, "r")
+	LeaveTableStr = LeaveTableFile.read()
+	LeaveTable = json.loads(LeaveTableStr)
+	return LeaveTable
+	pass
+
+def isLeaves(nurse, date) :
+	return False
+	pass
+
 # def generateDate(day) :
 # 	if day < 10 :
 # 		date = "{0}-{1}-0{2}".format("2017", "12", day)
@@ -164,6 +184,10 @@ def scheduleMonthTable(nurses, monthInfo) :
 	nurseQueue = Queue.PriorityQueue()
 	for id in nurses.keys() :
 		nurse = nurses[id]
+		# constraint: make sure the age of nurse <= 40
+		# nurse.birthday is the age of nurse
+		if nurse.birthday > 40 :
+			continue
 		nurseQueue.put(nurse)
 	nurseQueueCopy = Queue.PriorityQueue()
 	for day in range(1, len(monthInfo) + 1) :
@@ -173,17 +197,30 @@ def scheduleMonthTable(nurses, monthInfo) :
 			# all nurses of group j
 			nursesOneGroup = list()
 			for k in range(nurseNumPerGroup) :
-				if nurseQueue.empty() : 
-					# if nurseQueue is empty, we schedule from the maximum priority
-					nurseQueue = nurseQueueCopy
-					# nurseQueueCopy will Copy the nurseQueue again
-					nurseQueueCopy = Queue.PriorityQueue()
+				# count = 0
+				while True :
+					# count = count+1
+					# if count >= len(nurseQueue) + len(nurseQueueCopy) :
+					# 	# too much nurse leave in monthInfo[day-1]
+					# 	# we cannot give a monthTable
+					# 	return None
+					if nurseQueue.empty() : 
+						# if nurseQueue is empty, we schedule from the maximum priority
+						nurseQueue = nurseQueueCopy
+						# nurseQueueCopy will Copy the nurseQueue again
+						nurseQueueCopy = Queue.PriorityQueue()
 
-				nurse = nurseQueue.get()
-				# nurseQueueCopy copy the nurse
-				nurseQueueCopy.put(nurse)
+					nurse = nurseQueue.get()
+					# nurseQueueCopy copy the nurse
+					nurseQueueCopy.put(nurse)
+					# constraint: make sure the nurse hasn't asked for leave
+					# if nurse has asked for leave today[monthTable]
+					# 	nurse.id cannot be added to nursesOneGroup
+					if isLeaves(nurse, monthInfo[day-1]) :
+						continue
 
-				nursesOneGroup.append(nurse.id)
+					nursesOneGroup.append(nurse.id)
+					break
 			# print nursesOneGroup
 			groupsOneDay.append(nursesOneGroup)
 		# print groupsOneDay
@@ -233,7 +270,11 @@ def getScheduleFromClient(surgeryTable, nurses, nurseNumPerSurgeryForClient) :
 
 # TODO 
 def matchDepartment(surgery, nurse) :
-	return True
+	# TODO: constraint: surgery.department is one element of nurse.department and nurse.is_experienced
+	for department in nurse.is_experienced :
+		if department == surgery.department :
+			return True
+	return False
 	pass
 
 # nurses<type 'dict'>: <str(id of nurse), Nurse> info of all nurses, come from database
@@ -351,12 +392,18 @@ def schedule(nurses, surgeries, monthTable, clientTable, monthInfo, surgeryTimeT
 
 # input: 	./db/json/nurses.json
 # 			./db/json/monthInfo.json(排夜班至少要知道这个月有多少天)
+# 			./db/json/leaves.json
 # output: 	./z3py/schedule/generate/nightResult.json
 def nightSchedule() :
 	nurses = getNurses(rootPath + "db/json/nurses.json")
 	monthInfo = getMonthInfo(rootPath + "db/json/monthInfo.json")
 	monthTable = scheduleMonthTable(nurses, monthInfo)
-	
+	if monthTable == None :
+		print "Failure: unsat"
+		return None
+	with open (rootPath + "db/json/monthTable.json", "w") as f :
+		json.dump(monthTable, f, skipkeys=False, ensure_ascii=False, check_circular=True, allow_nan=True, cls=None, indent=True, separators=None, encoding="utf-8", default=None, sort_keys=False)
+
 	# write monthTable to nightResult.json
 	nightResult = dict()
 	for day in range(1, len(monthTable)+1) :
@@ -384,6 +431,7 @@ def nightSchedule() :
 #			./db/json/surgeries.json(手术信息)
 # 		 	./db/json/clientTable.json
 # 			./db/json/monthTable.json
+#			./db/json/leaves.json
 # 		 	./db/json/surgeryTimeTable.json
 # 		 	./db/json/monthInfo.json(这里是想要周末日期信息，因为暂时没考虑这个，认为周末也是有手术的，故而暂不考虑，暂时保留，不一定需要)	
 # output:	./z3py/schedult/generate/nightResult.json		
