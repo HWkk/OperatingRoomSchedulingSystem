@@ -38,27 +38,27 @@ class SurgeriesController < ApplicationController
     surgery_id = params[:surgery_id]
     nurses_id = params[:nurse]
     surgery_date = Surgery.find(surgery_id).date.to_s
-    modifyClientTable(nurse_id, surgery_id, surgery_date)
+    modifyClientTable(nurses_id, surgery_id, surgery_date)
     @surgeries = Surgery.where(date: surgery_date)
     render 'surgeries/show'
   end
 
   def modifyClientTable(nurses_id, surgery_id, surgery_date)
-    array = Array.new
-    for nurse_id in nurses_id
-      array.push(nurse_id.to_i)
-    end
+    # array = Array.new
+    # for nurse_id in nurses_id
+    #   array.push(nurse_id)
+    # end
 
     clientTable = JSON.parse(File.read("./db/json/clientTable.json"))
     if(clientTable.has_key?(surgery_date))
       if(clientTable[surgery_date].has_key?(surgery_id))
-        clientTable[surgery_date][surgery_id] = array
+        clientTable[surgery_date][surgery_id] = nurses_id
       else
-        clientTable[surgery_date].store(surgery_id, array)
+        clientTable[surgery_date].store(surgery_id, nurses_id)
       end
     else
       hash = {}
-      hash.store(surgery_id, array)
+      hash.store(surgery_id, nurses_id)
       clientTable.store(surgery_date, hash)
     end
     File.new("./db/json/clientTable.json", "w").syswrite(JSON.pretty_generate(clientTable.as_json))
