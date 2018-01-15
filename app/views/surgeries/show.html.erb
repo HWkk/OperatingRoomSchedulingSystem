@@ -54,3 +54,8 @@
 		<% end %>
 	</tbody>
 </table>
+<p></p>
+<% if(@surgeries.length > 0) %>
+<% date = @surgeries[0].date %>
+	<a href="<%= surgeries_run_path %>?date=<%= date %>" >已经选好所有护士，请进行排班</a>
+<% end %>

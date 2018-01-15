@@ -5,5 +5,6 @@ Rails.application.routes.draw do
   get 'surgeries/show', to:"surgeries#show"
   get 'surgeries/schedule', to:"surgeries#schedule"
   post 'surgeries/addNurse', to:"surgeries#addNurse"
+  get 'surgeries/run', to:"surgeries#runAlgorithm"
 
 end

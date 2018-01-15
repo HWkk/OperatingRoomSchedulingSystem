@@ -7,7 +7,25 @@ class SurgeriesController < ApplicationController
   def show
   	d = params[:date]
   	@surgeries = Surgery.where(date: d)
+    initialClientTable(d, @surgeries)
   	render 'surgeries/show'
+  end
+
+  def initialClientTable(date, surgeries)
+    clientTable = {}
+    hash = {}
+    nurses = Nurse.all
+
+    array = Array.new
+    for nurse in nurses
+      array.push(nurse.id)
+    end
+
+    for surgery in surgeries
+      hash.store(surgery.id, array)
+    end
+    clientTable.store(date, hash)
+    File.new("./db/json/clientTable.json", "w").syswrite(JSON.pretty_generate(clientTable.as_json))
   end
 
   def schedule
@@ -17,41 +35,41 @@ class SurgeriesController < ApplicationController
   end
 
   def addNurse
-
     surgery_id = params[:surgery_id]
     nurses_id = params[:nurse]
+    surgery_date = Surgery.find(surgery_id).date.to_s
+    modifyClientTable(nurse_id, surgery_id, surgery_date)
+    @surgeries = Surgery.where(date: surgery_date)
+    render 'surgeries/show'
+  end
 
-    surgery = Surgery.find(surgery_id)
+  def modifyClientTable(nurses_id, surgery_id, surgery_date)
+    array = Array.new
+    for nurse_id in nurses_id
+      array.push(nurse_id.to_i)
+    end
 
-    # instrument_nurse.department = processDepartment(instrument_nurse.department)
-    # puts(instrument_nurse.department)
+    clientTable = JSON.parse(File.read("./db/json/clientTable.json"))
+    if(clientTable.has_key?(surgery_date))
+      if(clientTable[surgery_date].has_key?(surgery_id))
+        clientTable[surgery_date][surgery_id] = array
+      else
+        clientTable[surgery_date].store(surgery_id, array)
+      end
+    else
+      hash = {}
+      hash.store(surgery_id, array)
+      clientTable.store(surgery_date, hash)
+    end
+    File.new("./db/json/clientTable.json", "w").syswrite(JSON.pretty_generate(clientTable.as_json))
+  end
 
+  def runAlgorithm
     #此处应进行算法判断
     # if(true)
     #   surgery.update(instrument_nurse_id: instrument_nurse_id, roving_nurse_id: roving_nurse_id)
     # end
-
-    # nurses = Nurse.all
-    # time = Time.now
-
-    # for nurse in nurses 
-    #   nurse.department = processDepartment(nurse.department)
-    #   nurse.is_experienced = processDepartment(nurse.is_experienced)
-    #   nurse.birthday = time.year.to_i - nurse.birthday.to_s()[0, 5].to_i
-    # end
-
-    # nursesJson = File.new("./db/json/nurses.json", "w")
-    # if nursesJson
-    #   nursesJson.syswrite(JSON.pretty_generate(nurses.as_json))
-    # end
-
-    # File.new("./db/json/doctors.json", "w").syswrite(JSON.pretty_generate(Doctor.all.as_json))
-    # File.new("./db/json/patients.json", "w").syswrite(JSON.pretty_generate(Patient.all.as_json))
-    # File.new("./db/json/surgeries.json", "w").syswrite(JSON.pretty_generate(Surgery.all.as_json))
-    # File.new("./db/json/leaves.json", "w").syswrite(JSON.pretty_generate(Leave.all.as_json))
-    # File.new("./db/json/departments.json", "w").syswrite(JSON.pretty_generate(Department.all.as_json))
-
-    @surgeries = Surgery.where(date: surgery.date)
+    @surgeries = Surgery.where(date: params[:date])
     render 'surgeries/show'
   end
 
@@ -60,19 +78,6 @@ class SurgeriesController < ApplicationController
       client_table_data_str = File.read('./app/tools/z3interface/clientTable.json')
       surgery_time_data_str = File.read("./app/tools/z3interface/surgeryTimeTable.json")
       Schedule.schedule(client_table_data_str,surgery_time_data_str)
-  end
-
-  def processDepartment(departments)
-    index = 0
-    result = Array.new()
-    while index < 14
-      if(departments[index] == "1")
-        d = Department.find(index + 1)
-        result.push(d.name)
-      end
-      index = index + 1
-    end
-    return result
   end
 
 end
