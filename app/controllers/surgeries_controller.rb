@@ -18,7 +18,7 @@ class SurgeriesController < ApplicationController
 
     array = Array.new
     for nurse in nurses
-      array.push(nurse.id)
+      array.push(nurse.id.to_s)
     end
 
     for surgery in surgeries
