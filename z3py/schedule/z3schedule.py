@@ -204,17 +204,14 @@ def scheduleMonthTable(nurses, monthInfo, leaveTable) :
 	for day in range(1, len(monthInfo) + 1) :
 		# all groups on day i
 		groupsOneDay = list()
+		nursesDistinctOneNight = dict()
 		for j in range(groupNumPerNight) :
 			# all nurses of group j
 			nursesOneGroup = list()
 			for k in range(nurseNumPerGroup) :
-				# count = 0
+				
 				while True :
-					# count = count+1
-					# if count >= len(nurseQueue) + len(nurseQueueCopy) :
-					# 	# too much nurse leave in monthInfo[day-1]
-					# 	# we cannot give a monthTable
-					# 	return None
+					
 					if nurseQueue.empty() :
 						# if nurseQueue is empty, we schedule from the maximum priority
 						nurseQueue = nurseQueueCopy
@@ -231,6 +228,9 @@ def scheduleMonthTable(nurses, monthInfo, leaveTable) :
 						continue
 
 					nursesOneGroup.append(nurse.id)
+					if nursesDistinctOneNight.has_key(nurse.id) :
+						# one nurse has been scheduled to one night, it is illegal
+						return None
 					break
 			# print nursesOneGroup
 			groupsOneDay.append(nursesOneGroup)
