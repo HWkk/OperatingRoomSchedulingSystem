@@ -25,10 +25,6 @@ reload(sys)  # Python2.5 will delete sys.setdefaultencoding() while initialized 
 sys.setdefaultencoding('utf8')
 
 
-nursesFileName = rootPath + "db/json/nurses.json"
-surgeriesFileName = rootPath + "db/json/surgeries.json"
-
-
 nurseTypes = ["instrument", "roving"]
 # initialize the global variables
 # nurseNumPerClass is 3
@@ -131,10 +127,12 @@ def getClientTable(filename) :
 
 def getSurgeryTimeTable(surgeries) :
 	surgeryTimeTable = dict()
-	for surgery in surgeries :
-		if surgeryTimeTable[surgery.time] == None :
-			surgeryTimeTable[surgery.time] = list()
-		surgeryTimeTable[surgery.time].append()
+	for surgeryID in surgeries.keys() :
+		surgery = surgeries[surgeryID]
+		# TODO:
+		if surgeryTimeTable.has_key((surgery.date, surgery.time)) is False:
+			surgeryTimeTable[(surgery.date, surgery.time)] = list()
+		surgeryTimeTable[(surgery.date, surgery.time)].append(surgery.id)
 	# surgeryTimeTableFile = open(filename, "r")
 	# surgeryTimeTableStr = surgeryTimeTableFile.read()
 	# surgeryTimeTable = json.loads(surgeryTimeTableStr)
@@ -158,13 +156,26 @@ def getMonthTable(filename) :
 
 # leaves.json
 def getLeaveTable(filename) :
-	LeaveTableFile = open(filename, "r")
-	LeaveTableStr = LeaveTableFile.read()
-	LeaveTable = json.loads(LeaveTableStr)
-	return LeaveTable
+	leavesFile = open(filename, "r")
+	leavesStr = leavesFile.read()
+	leaves = json.loads(leavesStr)
+	# TODO:
+	leaveTable = dict()
+	for leave in leaves :
+		# print leave["date"]
+		if leaveTable.has_key(leave["date"]) is False :
+			leaveTable[leave["date"]] = list()
+		leaveTable[leave["date"]].append(str(leave["nurse_id"]))
+	return leaveTable
 	pass
 
-def isLeaves(nurse, date) :
+def isLeaves(nurse, date, leaveTable) :
+	if leaveTable.has_key(date) is False :
+		return False
+	dateLeaves = leaveTable[date]
+	for nurseID in dateLeaves :
+		if nurseID == nurse.id :
+			return true
 	return False
 	pass
 
@@ -179,7 +190,7 @@ def isLeaves(nurse, date) :
 
 # schedule for night of month
 # return monthTable<type 'dict'>: <str(date), list(<list(ids of nurses)>)> list:[groupNumPerNight][nurseNumPerGroup]
-def scheduleMonthTable(nurses, monthInfo) :
+def scheduleMonthTable(nurses, monthInfo, leaveTable) :
 	monthTable = dict()
 	nurseQueue = Queue.PriorityQueue()
 	for id in nurses.keys() :
@@ -216,7 +227,7 @@ def scheduleMonthTable(nurses, monthInfo) :
 					# constraint: make sure the nurse hasn't asked for leave
 					# if nurse has asked for leave today[monthTable]
 					# 	nurse.id cannot be added to nursesOneGroup
-					if isLeaves(nurse, monthInfo[day-1]) :
+					if isLeaves(nurse, monthInfo[day-1], leaveTable) :
 						continue
 
 					nursesOneGroup.append(nurse.id)
@@ -233,25 +244,25 @@ def scheduleMonthTable(nurses, monthInfo) :
 	pass
 
 
-# generate a fake scheduling table come from client
-# nurseNumPerSurgeryForClient is None means we use random int
-# return : clientTable dict <str(date), dict(<str(id of surgery), list(ids of nurses)>)>
-# clientTable[date] is the ids of nurses could be scheduled on day date
-def getScheduleFromClient(surgeryTable, nurses, nurseNumPerSurgeryForClient) :
-	clientTable = dict()
-	for date in surgeryTable.keys() :
-		surgeriesOneDay = dict()
-		for surgeryID in surgeryTable[date] :
-			nursesOneSurgery = list()
-			if nurseNumPerSurgeryForClient == None :
-				nurseNumPerSurgeryForClient = random.randint(2, len(nurses)+1)
-			for ni in range(1, nurseNumPerSurgeryForClient+1) :
-				nursesOneSurgery.append(str(ni))
-			surgeriesOneDay[surgeryID] = nursesOneSurgery
-		clientTable[date] = surgeriesOneDay
-	# print clientTable
-	return clientTable
-	pass
+# # generate a fake scheduling table come from client
+# # nurseNumPerSurgeryForClient is None means we use random int
+# # return : clientTable dict <str(date), dict(<str(id of surgery), list(ids of nurses)>)>
+# # clientTable[date] is the ids of nurses could be scheduled on day date
+# def getScheduleFromClient(surgeryTable, nurses, nurseNumPerSurgeryForClient) :
+# 	clientTable = dict()
+# 	for date in surgeryTable.keys() :
+# 		surgeriesOneDay = dict()
+# 		for surgeryID in surgeryTable[date] :
+# 			nursesOneSurgery = list()
+# 			if nurseNumPerSurgeryForClient == None :
+# 				nurseNumPerSurgeryForClient = random.randint(2, len(nurses)+1)
+# 			for ni in range(1, nurseNumPerSurgeryForClient+1) :
+# 				nursesOneSurgery.append(str(ni))
+# 			surgeriesOneDay[surgeryID] = nursesOneSurgery
+# 		clientTable[date] = surgeriesOneDay
+# 	# print clientTable
+# 	return clientTable
+# 	pass
 
 # # if nurseNum is None, nurseNum is randint(minNum, maxNum)
 # # return nurseNumTable: nurseNumTable[i] is the num of nurses in day i+1
@@ -270,11 +281,18 @@ def getScheduleFromClient(surgeryTable, nurses, nurseNumPerSurgeryForClient) :
 
 # TODO 
 def matchDepartment(surgery, nurse) :
-	# TODO: constraint: surgery.department is one element of nurse.department and nurse.is_experienced
+	
+	# constraint: surgery.department is one element of nurse.department and nurse.is_experienced
+	if type(nurse.is_experienced) == unicode or type(nurse.is_experienced) == str:
+		nurse.is_experienced = json.loads(nurse.is_experienced)
+	# print type(surgery.department)
 	for department in nurse.is_experienced :
 		if department == surgery.department :
+			# print "== works"
 			return True
+		# print department, " == ", surgery.department
 	return False
+	# return True
 	pass
 
 # nurses<type 'dict'>: <str(id of nurse), Nurse> info of all nurses, come from database
@@ -283,7 +301,7 @@ def matchDepartment(surgery, nurse) :
 # clientTable<type 'dict'>: <str(date), dict(<str(id of surgery), list(ids of nurses)>)>, come from client
 # monthInfo list of dates
 # surgeryTimeTable list<str(time), list(ids of surgeries)>
-def schedule(nurses, surgeries, monthTable, clientTable, monthInfo, surgeryTimeTable) :
+def schedule(nurses, surgeries, monthTable, clientTable, monthInfo, surgeryTimeTable, leaveTable) :
 	solver = z3.Solver()
 	grid = dict()
 	result = dict()
@@ -334,19 +352,21 @@ def schedule(nurses, surgeries, monthTable, clientTable, monthInfo, surgeryTimeT
 					dayNursesConstraint.append((value == int(nurseID), 1))
 				#<type 'unicode'>
 			if nurses[nurseID].is_pregnant == "true":
-				solver.add(z3.PbLe(dayNursesConstraint, 1))
+				solver.add(z3.PbLe(dayNursesConstraint, 3))
 			else :
-				solver.add(z3.PbLe(dayNursesConstraint, 1))
+				solver.add(z3.PbLe(dayNursesConstraint, 4))
 
-	# # constraint: make sure nurses are different in the same time
-	# for surIDs in surgeryTimeTable :
-	# 	sameTimeNurses = list()
-	# 	for surID in surIDs :
-	# 		for nurseType in nurseTypes :
-	# 			value = grid[(surgeries[surID].date, surID, nurseType)]
-	# 			sameTimeNurses.append(value)
-	# 	# constraint: make sure nurses are different in the same time
-	# 	solver.add(z3.Distinct(sameTimeNurses))
+	# constraint: make sure nurses are different in the same time
+	# print surgeryTimeTable
+	for time in surgeryTimeTable.keys() :
+		surIDs = surgeryTimeTable[time]
+		sameTimeNurses = list()
+		for surID in surIDs :
+			for nurseType in nurseTypes :
+				value = grid[(surgeries[surID].date, surID, nurseType)]
+				sameTimeNurses.append(value)
+		# constraint: make sure nurses are different in the same time
+		solver.add(z3.Distinct(sameTimeNurses))
 
 	# check sat
 	if solver.check() != z3.sat :
@@ -395,11 +415,14 @@ def schedule(nurses, surgeries, monthTable, clientTable, monthInfo, surgeryTimeT
 # 			./db/json/leaves.json
 # output: 	./z3py/schedule/generate/nightResult.json
 def nightSchedule() :
+	print "Night sheduling..."
 	nurses = getNurses(rootPath + "db/json/nurses.json")
 	monthInfo = getMonthInfo(rootPath + "db/json/monthInfo.json")
-	monthTable = scheduleMonthTable(nurses, monthInfo)
+	leaveTable = getLeaveTable(rootPath + "db/json/leaves.json")
+	monthTable = scheduleMonthTable(nurses, monthInfo, leaveTable)
+	
 	if monthTable == None :
-		print "Failure: unsat"
+		print "Night Scheduling Failure: \n\tunsat\n"
 		return None
 	with open (rootPath + "db/json/monthTable.json", "w") as f :
 		json.dump(monthTable, f, skipkeys=False, ensure_ascii=False, check_circular=True, allow_nan=True, cls=None, indent=True, separators=None, encoding="utf-8", default=None, sort_keys=False)
@@ -422,7 +445,7 @@ def nightSchedule() :
 		os.makedirs(rootPath + "z3py/generate/json/")
 	with open (rootPath + "z3py/generate/json/nightResult.json", "w") as f :
 		json.dump(nightResult, f, skipkeys=False, ensure_ascii=False, check_circular=True, allow_nan=True, cls=None, indent=True, separators=None, encoding="utf-8", default=None, sort_keys=False)
-		print "Success: the result of nightSchedule has been written to \n\t[" + rootPath + "z3py/generate/json/nightResult.json]"
+		print "Night Scheduling Success: \nthe result of nightSchedule has been written to \n\t[" + rootPath + "z3py/generate/json/nightResult.json]\n"
 	return nightResult
 	pass
 
@@ -436,18 +459,20 @@ def nightSchedule() :
 # 		 	./db/json/monthInfo.json(这里是想要周末日期信息，因为暂时没考虑这个，认为周末也是有手术的，故而暂不考虑，暂时保留，不一定需要)	
 # output:	./z3py/schedult/generate/nightResult.json		
 def daySchedule() :
+	print "Day scheduling..."
 	nurses = getNurses(rootPath + "db/json/nurses.json")
 	surgeries, surgeryTable = getSurgeries(rootPath + "db/json/surgeries.json")
 	monthTable = getMonthTable(rootPath + "db/json/monthTable.json")
 	clientTable = getClientTable(rootPath + "db/json/clientTable.json")
 	monthInfo = getMonthInfo(rootPath + "db/json/monthInfo.json")
-	# surgeryTimeTable = getSurgeryTimeTable(rootPath + "db/json/surgeryTimeTable.json")
-	surgeryTimeTable = None
+	leaveTable = getLeaveTable(rootPath + "db/json/leaves.json")
+	surgeryTimeTable = getSurgeryTimeTable(surgeries)
+	# surgeryTimeTable = None
 
-	dayResult = schedule(nurses, surgeries, monthTable, clientTable, monthInfo, surgeryTimeTable)
+	dayResult = schedule(nurses, surgeries, monthTable, clientTable, monthInfo, surgeryTimeTable, leaveTable)
 	
 	if dayResult is None :
-		print "Failure: unsat"
+		print "Day Scheduling Failure: \n\tunsat\n"
 		return None
 	# import os
 	if os.path.isdir(rootPath + "z3py/generate/json/") :
@@ -459,7 +484,7 @@ def daySchedule() :
 		os.makedirs(rootPath + "z3py/generate/json/")
 	with open (rootPath + "z3py/generate/json/dayResult.json", "w") as f :
 		json.dump(dayResult, f, skipkeys=False, ensure_ascii=False, check_circular=True, allow_nan=True, cls=None, indent=True, separators=None, encoding="utf-8", default=None, sort_keys=False)
-		print "Success: the result of daySchedule has been written to \n\t[" + rootPath + "z3py/generate/json/dayResult.json]"
+		print "Day Scheduling Success: \nthe result of daySchedule has been written to \n\t[" + rootPath + "z3py/generate/json/dayResult.json]\n"
 	return dayResult
 	pass
 
