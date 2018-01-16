@@ -202,7 +202,6 @@
     "instrument_nurse_id": "",
     "roving_nurse_id": null,
     "remark": "请排13间第一"
-<<<<<<< HEAD
   },
   {
     "id": 13,
@@ -1019,7 +1018,5 @@
     "instrument_nurse_id": "",
     "roving_nurse_id": null,
     "remark": "请排13间第一"
-=======
->>>>>>> 4aa19ab8ceffea0cdaf9093688573cd5144f0980
   }
 ]
