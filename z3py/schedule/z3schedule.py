@@ -32,7 +32,7 @@ nurseTypes = ["instrument", "roving"]
 nurseNumPerGroup = 3
 groupNumPerNight = 3
 # class nurse: generate by nurses.json
-# we have to modified the __str__ when nurses.json is modified 
+# we have to modified the __str__ when nurses.json is modified
 class Nurse :
 	def __init__(self) :
 		pass
@@ -89,7 +89,7 @@ def getNurses(filename) :
 		elif nurse.qualification == "低" :
 			nurse.priority = 1
 		else :
-			sys.stderr.write("error qualification: " + nurse.qualification + "\n") 
+			sys.stderr.write("error qualification: " + nurse.qualification + "\n")
 			# print nurse.qualification + " : error"
 	return nurses
 	pass
@@ -215,7 +215,7 @@ def scheduleMonthTable(nurses, monthInfo, leaveTable) :
 					# 	# too much nurse leave in monthInfo[day-1]
 					# 	# we cannot give a monthTable
 					# 	return None
-					if nurseQueue.empty() : 
+					if nurseQueue.empty() :
 						# if nurseQueue is empty, we schedule from the maximum priority
 						nurseQueue = nurseQueueCopy
 						# nurseQueueCopy will Copy the nurseQueue again
@@ -279,9 +279,9 @@ def scheduleMonthTable(nurses, monthInfo, leaveTable) :
 # 	return nurseNums
 
 
-# TODO 
+# TODO
 def matchDepartment(surgery, nurse) :
-	
+
 	# constraint: surgery.department is one element of nurse.department and nurse.is_experienced
 	if type(nurse.is_experienced) == unicode or type(nurse.is_experienced) == str:
 		nurse.is_experienced = json.loads(nurse.is_experienced)
@@ -336,11 +336,11 @@ def schedule(nurses, surgeries, monthTable, clientTable, monthInfo, surgeryTimeT
 				# constraint: make sure all of the nurses come from client
 				solver.add(z3.Or(orListForDepartment))
 				nightAndDayNurses.append(value)
-				
+
 			# constraint: make sure nurses working for day are not working for night
 			solver.add(z3.Distinct(nightAndDayNurses))
 		# solver.add(z3.Eqel)
-			
+
 	# constraint: make sure the number of surgeries is limited by work hours
 	for nurseID in nurses.keys() :
 
@@ -376,7 +376,7 @@ def schedule(nurses, surgeries, monthTable, clientTable, monthInfo, surgeryTimeT
 		# print "sat"
 		pass
 	# get the model
-	
+
 	model = solver.model()
 	# get the result
 	for date in clientTable.keys() :
@@ -420,9 +420,9 @@ def nightSchedule() :
 	monthInfo = getMonthInfo(rootPath + "db/json/monthInfo.json")
 	leaveTable = getLeaveTable(rootPath + "db/json/leaves.json")
 	monthTable = scheduleMonthTable(nurses, monthInfo, leaveTable)
-	
+
 	if monthTable == None :
-		print "Night Scheduling Failure: \n\tunsat\n"
+		# print "Night Scheduling Failure: \n\tunsat\n"
 		return None
 	with open (rootPath + "db/json/monthTable.json", "w") as f :
 		json.dump(monthTable, f, skipkeys=False, ensure_ascii=False, check_circular=True, allow_nan=True, cls=None, indent=True, separators=None, encoding="utf-8", default=None, sort_keys=False)
@@ -445,7 +445,7 @@ def nightSchedule() :
 		os.makedirs(rootPath + "z3py/generate/json/")
 	with open (rootPath + "z3py/generate/json/nightResult.json", "w") as f :
 		json.dump(nightResult, f, skipkeys=False, ensure_ascii=False, check_circular=True, allow_nan=True, cls=None, indent=True, separators=None, encoding="utf-8", default=None, sort_keys=False)
-		print "Night Scheduling Success: \nthe result of nightSchedule has been written to \n\t[" + rootPath + "z3py/generate/json/nightResult.json]\n"
+		# print "Night Scheduling Success: \nthe result of nightSchedule has been written to \n\t[" + rootPath + "z3py/generate/json/nightResult.json]\n"
 	return nightResult
 	pass
 
@@ -456,8 +456,8 @@ def nightSchedule() :
 # 			./db/json/monthTable.json
 #			./db/json/leaves.json
 # 		 	./db/json/surgeryTimeTable.json
-# 		 	./db/json/monthInfo.json(这里是想要周末日期信息，因为暂时没考虑这个，认为周末也是有手术的，故而暂不考虑，暂时保留，不一定需要)	
-# output:	./z3py/schedult/generate/nightResult.json		
+# 		 	./db/json/monthInfo.json(这里是想要周末日期信息，因为暂时没考虑这个，认为周末也是有手术的，故而暂不考虑，暂时保留，不一定需要)
+# output:	./z3py/schedult/generate/nightResult.json
 def daySchedule() :
 	print "Day scheduling..."
 	nurses = getNurses(rootPath + "db/json/nurses.json")
@@ -470,9 +470,9 @@ def daySchedule() :
 	# surgeryTimeTable = None
 
 	dayResult = schedule(nurses, surgeries, monthTable, clientTable, monthInfo, surgeryTimeTable, leaveTable)
-	
+
 	if dayResult is None :
-		print "Day Scheduling Failure: \n\tunsat\n"
+		# print "Day Scheduling Failure: \n\tunsat\n"
 		return None
 	# import os
 	if os.path.isdir(rootPath + "z3py/generate/json/") :
@@ -484,7 +484,7 @@ def daySchedule() :
 		os.makedirs(rootPath + "z3py/generate/json/")
 	with open (rootPath + "z3py/generate/json/dayResult.json", "w") as f :
 		json.dump(dayResult, f, skipkeys=False, ensure_ascii=False, check_circular=True, allow_nan=True, cls=None, indent=True, separators=None, encoding="utf-8", default=None, sort_keys=False)
-		print "Day Scheduling Success: \nthe result of daySchedule has been written to \n\t[" + rootPath + "z3py/generate/json/dayResult.json]\n"
+		# print "Day Scheduling Success: \nthe result of daySchedule has been written to \n\t[" + rootPath + "z3py/generate/json/dayResult.json]\n"
 	return dayResult
 	pass
 
@@ -526,23 +526,11 @@ def demoOfScheduling() :
 def main() :
 
 	nightResult = nightSchedule()
-	
+
 	dayResult = daySchedule()
-		
+
 	# print dayResult
 
 if __name__ == '__main__':
     main()
     pass
-
-
-
-
-
-
-
-
-
-
-
-

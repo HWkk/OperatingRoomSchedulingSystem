@@ -1,5 +1,5 @@
 load './app/tools/z3interface/schedule.rb'
 
-puts daySchedule()
+puts daySchedulez3()
 
-puts nightSchedule()
+puts nightSchedulez3()
