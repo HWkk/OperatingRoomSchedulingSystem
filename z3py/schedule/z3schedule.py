@@ -415,7 +415,7 @@ def schedule(nurses, surgeries, monthTable, clientTable, monthInfo, surgeryTimeT
 # 			./db/json/leaves.json
 # output: 	./z3py/schedule/generate/nightResult.json
 def nightSchedule() :
-	print "Night sheduling..."
+	# print "Night sheduling..."
 	nurses = getNurses(rootPath + "db/json/nurses.json")
 	monthInfo = getMonthInfo(rootPath + "db/json/monthInfo.json")
 	leaveTable = getLeaveTable(rootPath + "db/json/leaves.json")
@@ -459,7 +459,7 @@ def nightSchedule() :
 # 		 	./db/json/monthInfo.json(这里是想要周末日期信息，因为暂时没考虑这个，认为周末也是有手术的，故而暂不考虑，暂时保留，不一定需要)
 # output:	./z3py/schedult/generate/nightResult.json
 def daySchedule() :
-	print "Day scheduling..."
+	# print "Day scheduling..."
 	nurses = getNurses(rootPath + "db/json/nurses.json")
 	surgeries, surgeryTable = getSurgeries(rootPath + "db/json/surgeries.json")
 	monthTable = getMonthTable(rootPath + "db/json/monthTable.json")
