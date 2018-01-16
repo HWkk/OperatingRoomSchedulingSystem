@@ -1,0 +1,2 @@
+class NightSchedule < ApplicationRecord
+end

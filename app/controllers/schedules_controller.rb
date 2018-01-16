@@ -1,19 +1,19 @@
 class SchedulesController < ApplicationController
   protect_from_forgery with: :exception
 
-  @count = 0
+  def firstShow
+    initialJson()
+    render 'schedules/show'
+  end
 
   def show
-    if(@count == 0)
-  	 initialJson()
-     @count = @count + 1
-    end
   end
 
   def initialJson
   	nurses = Nurse.all
     time = Time.now
     departments = getDepartments()
+    puts(departments)
 
     for nurse in nurses 
       nurse.department = processDepartment(nurse.department, departments)
@@ -41,15 +41,87 @@ class SchedulesController < ApplicationController
   end
 
   def getDepartments
-    array = Array.new
     index = 1
-    result = Array.new()
+    result = Array.new
     while index <= 14
       d = Department.find(index)
       result.push(d.name)
       index = index + 1
     end
-    return array
+    return result
   end
 
+  def nightSchedule
+    night_schedule = params[:night_schedule]
+    dates = processNightScheduleDate(night_schedule)
+    File.new("./db/json/monthInfo.json", "w").syswrite(JSON.pretty_generate(dates.as_json))
+    load('./app/tools/z3interface/schedule.rb')
+    nightSchedulez3()
+    nightScheduleResult = JSON.parse(File.read("./z3py/generate/json/nightResult.json"))
+    updateNightSchedule(nightScheduleResult)
+    @schedules = findSchedules(dates)
+    render 'schedules/nightSchedule'
+  end
+
+  def updateNightSchedule(nightScheduleResult)
+    nightScheduleResult.each_key { |date|
+      schedule = NightSchedule.find_by(date: date)
+      if(schedule == nil)
+        schedule = NightSchedule.create(date: date, nurse1_id: nightScheduleResult[date]["night"][0].to_i, 
+          nurse2_id: nightScheduleResult[date]["night"][1].to_i,
+          nurse3_id: nightScheduleResult[date]["night"][2].to_i,
+          nurse4_id: nightScheduleResult[date]["night"][3].to_i,
+          nurse5_id: nightScheduleResult[date]["night"][4].to_i,
+          nurse6_id: nightScheduleResult[date]["night"][5].to_i,
+          nurse7_id: nightScheduleResult[date]["night"][6].to_i,
+          nurse8_id: nightScheduleResult[date]["night"][7].to_i,
+          nurse9_id: nightScheduleResult[date]["night"][8].to_i)
+      else
+        schedule.update(nurse1_id: nightScheduleResult[date]["night"][0].to_i, 
+          nurse2_id: nightScheduleResult[date]["night"][1].to_i,
+          nurse3_id: nightScheduleResult[date]["night"][2].to_i,
+          nurse4_id: nightScheduleResult[date]["night"][3].to_i,
+          nurse5_id: nightScheduleResult[date]["night"][4].to_i,
+          nurse6_id: nightScheduleResult[date]["night"][5].to_i,
+          nurse7_id: nightScheduleResult[date]["night"][6].to_i,
+          nurse8_id: nightScheduleResult[date]["night"][7].to_i,
+          nurse9_id: nightScheduleResult[date]["night"][8].to_i)
+      end
+    }
+  end
+
+  def processNightScheduleDate(night_schedule)
+    start_date = night_schedule[:year] + "-" + night_schedule[:month] + "-01"
+    if(night_schedule[:month].to_i != 12)
+      end_date = night_schedule[:year] + "-" + (night_schedule[:month].to_i + 1).to_s + "-01"
+    else
+      end_date = (night_schedule[:year].to_i + 1).to_s + "-01-01"
+    end
+    dates = SurgeriesController.new.processDate(start_date, end_date)
+    dates.delete_at(dates.length - 1)
+    return dates
+  end
+
+  def findSchedules(dates)
+    hash = {}
+    for date in dates
+      array = Array.new
+      schedule = NightSchedule.find_by(date: date)
+      array.push(Nurse.find(schedule.nurse1_id).name)
+      array.push(Nurse.find(schedule.nurse2_id).name)
+      array.push(Nurse.find(schedule.nurse3_id).name)
+      array.push(Nurse.find(schedule.nurse4_id).name)
+      array.push(Nurse.find(schedule.nurse5_id).name)
+      array.push(Nurse.find(schedule.nurse6_id).name)
+      array.push(Nurse.find(schedule.nurse7_id).name)
+      array.push(Nurse.find(schedule.nurse8_id).name)
+      array.push(Nurse.find(schedule.nurse9_id).name)
+      hash.store(date, array)
+    end
+    return hash
+  end
+
+  def backToIndex
+    render 'schedules/show'
+  end
 end

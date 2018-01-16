@@ -9,7 +9,7 @@ class SurgeriesController < ApplicationController
     end_date = params[:end_date][:year] + "-" + params[:end_date][:month] + "-" + params[:end_date][:day]
     session[:start_date] = start_date
     session[:end_date] = end_date
-    dates = processingDate(start_date, end_date)
+    dates = processDate(start_date, end_date)
 
     @surgeries = selectSurgeries(dates)
     initialClientTableJson(dates)
@@ -17,7 +17,7 @@ class SurgeriesController < ApplicationController
   	render 'surgeries/show'
   end
 
-  def selectSurgeries(dates)
+  def selectSurgeries(dates) 
     surgeries = Array.new
     for date in dates
       s = Surgery.where(date: date)
@@ -28,7 +28,7 @@ class SurgeriesController < ApplicationController
     return surgeries
   end
 
-  def processingDate(startD, endD)
+  def processDate(startD, endD)
     start_date = Date.parse(startD)
     end_date = Date.parse(endD)
     dates = (start_date..end_date).to_a
@@ -63,27 +63,14 @@ class SurgeriesController < ApplicationController
   def daySchedule
     @surgery = Surgery.find(params[:surgery_id])
   	@nurses = Nurse.all
-    # return Data if success, None if fail.
-    load('./app/tools/z3interface/schedule.rb')
-    dayScheduleResult = daySchedulez3()
   	render 'surgeries/schedule'
-  end
-
-  def nightSchedule
-    #此处应执行算法
-    nightScheduleYear = params[:nightSchedule][:year]
-    nightScheduleMonth = params[:nightSchedule][:month]
-    # return Data if success, None if fail.
-    load('./app/tools/z3interface/schedule.rb')
-    dayScheduleResult = daySchedulez3()
-    render 'schedules/show'
   end
 
   def addNurse
     surgery_id = params[:surgery_id]
     surgery_date = Surgery.find(surgery_id).date.to_s
     modifyClientTable(params[:nurse], surgery_id, surgery_date)
-    @surgeries = selectSurgeries(processingDate(session[:start_date], session[:end_date]))
+    @surgeries = selectSurgeries(processDate(session[:start_date], session[:end_date]))
     render 'surgeries/show'
   end
 
@@ -104,19 +91,11 @@ class SurgeriesController < ApplicationController
   end
 
   def runAlgorithm
-    #此处应进行算法判断
-    # if(true)
-    #   surgery.update(instrument_nurse_id: instrument_nurse_id, roving_nurse_id: roving_nurse_id)
-    # end
-    @surgeries = selectSurgeries(processingDate(session[:start_date], session[:end_date]))
+    load('./app/tools/z3interface/schedule.rb')
+    dayScheduleResult = daySchedulez3()
+    puts(dayScheduleResult)
+    @surgeries = selectSurgeries(processDate(session[:start_date], session[:end_date]))
     render 'surgeries/show'
-  end
-
-  def getScheduleResult
-      # TODO: 这里的参数暂时省略了,这些参数应该是从数据库中获取
-      client_table_data_str = File.read('./app/tools/z3interface/clientTable.json')
-      surgery_time_data_str = File.read("./app/tools/z3interface/surgeryTimeTable.json")
-      Schedule.schedule(client_table_data_str,surgery_time_data_str)
   end
 
   def backToIndex
