@@ -1,3 +1,5 @@
-require('./app/tools/z3interface/Schedule')
+load './app/tools/z3interface/schedule.rb'
 
-Schedule.schedule()
+puts daySchedule()
+
+puts nightSchedule()
