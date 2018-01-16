@@ -5,15 +5,42 @@ class SurgeriesController < ApplicationController
   protect_from_forgery prepend: true, with: :exception
 
   def show
-  	d = params[:date]
-  	@surgeries = Surgery.where(date: d)
-    initialClientTable(d, @surgeries)
+    start_date = params[:start_date][:year] + "-" + params[:start_date][:month] + "-" + params[:start_date][:day]
+    end_date = params[:end_date][:year] + "-" + params[:end_date][:month] + "-" + params[:end_date][:day]
+    session[:start_date] = start_date
+    session[:end_date] = end_date
+    dates = processingDate(start_date, end_date)
+
+    @surgeries = selectSurgeries(dates)
+    initialClientTableJson(dates)
+    initialSurgeriesJson(@surgeries)
   	render 'surgeries/show'
   end
 
-  def initialClientTable(date, surgeries)
+  def selectSurgeries(dates) 
+    surgeries = Array.new
+    for date in dates
+      s = Surgery.where(date: date)
+      for surgery in s
+        surgeries.push(surgery)
+      end
+    end
+    return surgeries
+  end
+
+  def processingDate(startD, endD)
+    start_date = Date.parse(startD)
+    end_date = Date.parse(endD)
+    dates = (start_date..end_date).to_a
+    return dates
+  end
+
+  def initialSurgeriesJson(surgeries)
+    File.new("./db/json/surgeries.json", "w").syswrite(JSON.pretty_generate(surgeries.as_json))
+  end
+
+  def initialClientTableJson(dates)
     clientTable = {}
-    hash = {}
     nurses = Nurse.all
 
     array = Array.new
@@ -21,34 +48,40 @@ class SurgeriesController < ApplicationController
       array.push(nurse.id.to_s)
     end
 
-    for surgery in surgeries
-      hash.store(surgery.id, array)
+    for date in dates
+      s = Surgery.where(date: date)
+      hash = {}
+      for surgery in s
+        hash.store(surgery.id, array)
+      end
+      clientTable.store(date, hash)
     end
-    clientTable.store(date, hash)
+
     File.new("./db/json/clientTable.json", "w").syswrite(JSON.pretty_generate(clientTable.as_json))
   end
 
-  def schedule
+  def daySchedule
     @surgery = Surgery.find(params[:surgery_id])
   	@nurses = Nurse.all
   	render 'surgeries/schedule'
   end
 
+  def nightSchedule
+    #此处应执行算法
+    nightScheduleYear = params[:nightSchedule][:year]
+    nightScheduleMonth = params[:nightSchedule][:month]
+    render 'schedules/show'
+  end
+
   def addNurse
     surgery_id = params[:surgery_id]
-    nurses_id = params[:nurse]
     surgery_date = Surgery.find(surgery_id).date.to_s
-    modifyClientTable(nurses_id, surgery_id, surgery_date)
-    @surgeries = Surgery.where(date: surgery_date)
+    modifyClientTable(params[:nurse], surgery_id, surgery_date)
+    @surgeries = selectSurgeries(processingDate(session[:start_date], session[:end_date]))
     render 'surgeries/show'
   end
 
   def modifyClientTable(nurses_id, surgery_id, surgery_date)
-    # array = Array.new
-    # for nurse_id in nurses_id
-    #   array.push(nurse_id)
-    # end
-
     clientTable = JSON.parse(File.read("./db/json/clientTable.json"))
     if(clientTable.has_key?(surgery_date))
       if(clientTable[surgery_date].has_key?(surgery_id))
@@ -69,7 +102,7 @@ class SurgeriesController < ApplicationController
     # if(true)
     #   surgery.update(instrument_nurse_id: instrument_nurse_id, roving_nurse_id: roving_nurse_id)
     # end
-    @surgeries = Surgery.where(date: params[:date])
+    @surgeries = selectSurgeries(processingDate(session[:start_date], session[:end_date]))
     render 'surgeries/show'
   end
 
@@ -78,6 +111,21 @@ class SurgeriesController < ApplicationController
       client_table_data_str = File.read('./app/tools/z3interface/clientTable.json')
       surgery_time_data_str = File.read("./app/tools/z3interface/surgeryTimeTable.json")
       Schedule.schedule(client_table_data_str,surgery_time_data_str)
+  end
+
+  def backToIndex
+    if(!session[:start_date].nil?)
+      session[:start_date] = nil
+    end
+    if(!session[:end_date].nil?)
+      session[:end_date] = nil
+    end
+    render 'schedules/show'
+  end
+
+  def backToList
+    @surgeries = selectSurgeries(processingDate(session[:start_date], session[:end_date]))
+    render 'surgeries/show'
   end
 
 end
