@@ -17,7 +17,7 @@ class SurgeriesController < ApplicationController
   	render 'surgeries/show'
   end
 
-  def selectSurgeries(dates) 
+  def selectSurgeries(dates)
     surgeries = Array.new
     for date in dates
       s = Surgery.where(date: date)
@@ -63,6 +63,9 @@ class SurgeriesController < ApplicationController
   def daySchedule
     @surgery = Surgery.find(params[:surgery_id])
   	@nurses = Nurse.all
+    # return Data if success, None if fail.
+    load('./app/tools/z3interface/schedule.rb')
+    dayScheduleResult = daySchedulez3()
   	render 'surgeries/schedule'
   end
 
@@ -70,6 +73,9 @@ class SurgeriesController < ApplicationController
     #此处应执行算法
     nightScheduleYear = params[:nightSchedule][:year]
     nightScheduleMonth = params[:nightSchedule][:month]
+    # return Data if success, None if fail.
+    load('./app/tools/z3interface/schedule.rb')
+    dayScheduleResult = daySchedulez3()
     render 'schedules/show'
   end
 
