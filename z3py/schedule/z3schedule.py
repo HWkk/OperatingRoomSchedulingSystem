@@ -31,9 +31,12 @@ nurseTypes = ["instrument", "roving"]
 # but we never use the variable right now
 nurseNumPerGroup = 3
 groupNumPerNight = 3
-# class nurse: generate by nurses.json
-# we have to modified the __str__ when nurses.json is modified
+
 class Nurse :
+	'''
+	class nurse: generate by nurses.json
+ 	we have to modified the __str__ when nurses.json is modified
+	'''
 	def __init__(self) :
 		pass
 
@@ -43,27 +46,31 @@ class Nurse :
 
 	def __str__(self) :
 		return 	"id: " + self.id + \
-				"\nhas_coach_qualification: " + self.has_coach_qualification + \
-				"\nis_lactation: " + self.is_lactation + \
-				"\nphone_number: " + self.phone_number + \
-				"\nid_card_num: " + self.id_card_num + \
-				"\nsalary: " + self.salary + \
-				"\nqualification: " + self.qualification + \
-				"\nis_pregnant: " + self.is_pregnant + \
-				"\nbirthday: " + self.birthday + \
-				"\nis_experienced: " + self.is_experienced + \
-				"\ninaugural_date: " + self.inaugural_date + \
-				"\ndepartment: " + self.department + \
-				"\ngender: " + self.gender + \
-				"\nname: " + self.name
+				"\nhas_coach_qualification: " + str(self.has_coach_qualification) + \
+				"\nis_lactation: " + str(self.is_lactation) + \
+				"\nphone_number: " + str(self.phone_number) + \
+				"\nid_card_num: " + str(self.id_card_num) + \
+				"\nsalary: " + str(self.salary) + \
+				"\nqualification: " + str(self.qualification) + \
+				"\nis_pregnant: " + str(self.is_pregnant) + \
+				"\nbirthday: " + str(self.birthday) + \
+				"\nis_experienced: " + str(self.is_experienced) + \
+				"\ninaugural_date: " + str(self.inaugural_date) + \
+				"\ndepartment: " + str(self.department) + \
+				"\ngender: " + str(self.gender) + \
+				"\nname: " + str(self.name)
 		pass
 
 class Surgery :
+	'''
+	class Surgery: generate by surgeries.json
+	'''
 	def __init__(self) :
 		pass
 
 # generate nurses table by nurses.json
 # return a dict <str(id), Nurse>
+# file: nurses.json
 def getNurses(filename) :
 	nursesFile = open(filename, "r")
 	nursesStr = nursesFile.read()
@@ -94,8 +101,9 @@ def getNurses(filename) :
 	return nurses
 	pass
 
-# generate nurses table by surgeries.json
+# generate surgeries table by surgeries.json
 # return surgeries dict <str(id), Surgery>, dict <str(date), list(ids of surgeries)>
+# file: surgeries.json
 def getSurgeries(filename) :
 	surgeriesFile = open(filename, "r")
 	surgeriesStr = surgeriesFile.read()
@@ -116,7 +124,7 @@ def getSurgeries(filename) :
 	return surgeries, surgeryTable
 	pass
 
-# clientTable.json
+# file: clientTable.json
 def getClientTable(filename) :
 	clientTableFile = open(filename, "r")
 	clientTableStr = clientTableFile.read()
@@ -124,7 +132,7 @@ def getClientTable(filename) :
 	return clientTable
 	pass
 
-
+# surgeries is come from function getSurgeries(filename)
 def getSurgeryTimeTable(surgeries) :
 	surgeryTimeTable = dict()
 	for surgeryID in surgeries.keys() :
@@ -139,7 +147,7 @@ def getSurgeryTimeTable(surgeries) :
 	return surgeryTimeTable
 	pass
 
-# monthInfo.json
+# file: monthInfo.json
 def getMonthInfo(filename) :
 	monthInfoFile = open(filename, "r")
 	monthInfoStr = monthInfoFile.read()
@@ -147,6 +155,7 @@ def getMonthInfo(filename) :
 	return monthInfo
 	pass
 
+# file: monthTable.json
 def getMonthTable(filename) :
 	monthTableFile = open(filename, "r")
 	monthTableStr = monthTableFile.read()
@@ -154,7 +163,7 @@ def getMonthTable(filename) :
 	return monthTable
 	pass
 
-# leaves.json
+# file: leaves.json
 def getLeaveTable(filename) :
 	leavesFile = open(filename, "r")
 	leavesStr = leavesFile.read()
@@ -169,6 +178,8 @@ def getLeaveTable(filename) :
 	return leaveTable
 	pass
 
+# return True if nurse will leave on date
+# else return False
 def isLeaves(nurse, date, leaveTable) :
 	if leaveTable.has_key(date) is False :
 		return False
@@ -179,20 +190,12 @@ def isLeaves(nurse, date, leaveTable) :
 	return False
 	pass
 
-# def generateDate(day) :
-# 	if day < 10 :
-# 		date = "{0}-{1}-0{2}".format("2017", "12", day)
-# 	else :
-# 		date = "{0}-{1}-{2}".format("2017", "12", day)
-# 	return date
-# 	pass
-
-
 # schedule for night of month
 # nurses<type 'dict'>: <str(id of nurse), Nurse> info of all nurses, come from database
 # monthInfo list of dates
 # leaveTable dict<str(date), list(ids of nurses)>
-# return monthTable<type 'dict'>: <str(date), list(<list(ids of nurses)>)> list:[groupNumPerNight][nurseNumPerGroup]
+# sat: return monthTable<type 'dict'>: <str(date), list(<list(ids of nurses)>)> list:[groupNumPerNight][nurseNumPerGroup]
+# unsat: return None
 def scheduleMonthTable(nurses, monthInfo, leaveTable) :
 	monthTable = dict()
 	nurseQueue = Queue.PriorityQueue()
@@ -282,9 +285,9 @@ def scheduleMonthTable(nurses, monthInfo, leaveTable) :
 # 	return nurseNums
 
 
-# TODO
+# return True if department of surgery matches with nurse
+# else return False
 def matchDepartment(surgery, nurse) :
-
 	# constraint: surgery.department is one element of nurse.department and nurse.is_experienced
 	if type(nurse.is_experienced) == unicode or type(nurse.is_experienced) == str:
 		nurse.is_experienced = json.loads(nurse.is_experienced)
@@ -305,8 +308,8 @@ def matchDepartment(surgery, nurse) :
 # monthInfo list of dates
 # surgeryTimeTable dict<tuple(date,time), list(ids of surgeries)>
 # leaveTable dict<str(date), list(ids of nurses)>
-# return None if unsat
-# return result(dict) if sat
+# unsat: return None
+# sat: return result(dict)
 def schedule(nurses, surgeries, monthTable, clientTable, monthInfo, surgeryTimeTable, leaveTable) :
 	solver = z3.Solver()
 	grid = dict()
@@ -417,12 +420,16 @@ def schedule(nurses, surgeries, monthTable, clientTable, monthInfo, surgeryTimeT
 	return result
 	pass
 
-# input: 	./db/json/nurses.json
-# 			./db/json/monthInfo.json
-# 			./db/json/leaves.json
-# output: 	./z3py/schedule/generate/nightResult.json
-# 			return nightResult(dict)
+
 def nightSchedule() :
+	'''
+	 input: 	./db/json/nurses.json
+	 			./db/json/monthInfo.json
+	 			./db/json/leaves.json
+	 output: 	./z3py/schedule/generate/nightResult.json
+	 			return nightResult(dict)
+	'''
+
 	# print "Night sheduling..."
 	nurses = getNurses(rootPath + "db/json/nurses.json")
 	monthInfo = getMonthInfo(rootPath + "db/json/monthInfo.json")
@@ -458,16 +465,20 @@ def nightSchedule() :
 	pass
 
 
-# input:	./db/json/nurses.json
-#			./db/json/surgeries.json
-# 			./db/json/monthTable.json
-# 		 	./db/json/clientTable.json
-# 		 	./db/json/monthInfo.json
-# 		 	./db/json/surgeryTimeTable.json
-#			./db/json/leaves.json
-# output:	./z3py/schedult/generate/nightResult.json
-#			return dayResult(dict)
+
 def daySchedule() :
+	'''
+	 input:	./db/json/nurses.json
+				./db/json/surgeries.json
+	 			./db/json/monthTable.json
+	 		 	./db/json/clientTable.json
+	 		 	./db/json/monthInfo.json
+	 		 	./db/json/surgeryTimeTable.json
+				./db/json/leaves.json
+	 output:	./z3py/schedult/generate/nightResult.json
+				return dayResult(dict)
+	'''
+
 	# print "Day scheduling..."
 	nurses = getNurses(rootPath + "db/json/nurses.json")
 	surgeries, surgeryTable = getSurgeries(rootPath + "db/json/surgeries.json")
@@ -496,8 +507,7 @@ def daySchedule() :
 		# print "Day Scheduling Success: \nthe result of daySchedule has been written to \n\t[" + rootPath + "z3py/generate/json/dayResult.json]\n"
 	return dayResult
 	pass
-
-
+# demo of scheduling
 def demoOfScheduling() :
 	# nurses : contains info of all nurses
 	nurses = getNurses(nursesFileName)
