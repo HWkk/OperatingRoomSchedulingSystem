@@ -1,5 +1,7 @@
 class SchedulesController < ApplicationController
   protect_from_forgery with: :exception
+  def index
+  end
 
   def firstShow
     initialJson()
@@ -15,7 +17,7 @@ class SchedulesController < ApplicationController
     departments = getDepartments()
     puts(departments)
 
-    for nurse in nurses 
+    for nurse in nurses
       nurse.department = processDepartment(nurse.department, departments)
       nurse.is_experienced = processDepartment(nurse.is_experienced, departments)
       nurse.birthday = time.year.to_i - nurse.birthday.to_s()[0, 5].to_i
@@ -67,7 +69,7 @@ class SchedulesController < ApplicationController
     nightScheduleResult.each_key { |date|
       schedule = NightSchedule.find_by(date: date)
       if(schedule == nil)
-        schedule = NightSchedule.create(date: date, nurse1_id: nightScheduleResult[date]["night"][0].to_i, 
+        schedule = NightSchedule.create(date: date, nurse1_id: nightScheduleResult[date]["night"][0].to_i,
           nurse2_id: nightScheduleResult[date]["night"][1].to_i,
           nurse3_id: nightScheduleResult[date]["night"][2].to_i,
           nurse4_id: nightScheduleResult[date]["night"][3].to_i,
@@ -77,7 +79,7 @@ class SchedulesController < ApplicationController
           nurse8_id: nightScheduleResult[date]["night"][7].to_i,
           nurse9_id: nightScheduleResult[date]["night"][8].to_i)
       else
-        schedule.update(nurse1_id: nightScheduleResult[date]["night"][0].to_i, 
+        schedule.update(nurse1_id: nightScheduleResult[date]["night"][0].to_i,
           nurse2_id: nightScheduleResult[date]["night"][1].to_i,
           nurse3_id: nightScheduleResult[date]["night"][2].to_i,
           nurse4_id: nightScheduleResult[date]["night"][3].to_i,

@@ -1,4 +1,5 @@
-<table>
+<body>
+<table class='table'>
 	<tbody>
 		<tr>
 			<td>手术日期</td>
@@ -40,7 +41,7 @@
 						<% end %>
 					</td>
 				<% end %>
-					
+
 				<% roving_nurses = surgery.getNurses(surgery.roving_nurse_id) %>
 				<% if(roving_nurses.length == 0) %>
 					<td>无</td>
