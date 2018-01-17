@@ -175,7 +175,7 @@ def isLeaves(nurse, date, leaveTable) :
 	dateLeaves = leaveTable[date]
 	for nurseID in dateLeaves :
 		if nurseID == nurse.id :
-			return true
+			return True
 	return False
 	pass
 
@@ -189,6 +189,9 @@ def isLeaves(nurse, date, leaveTable) :
 
 
 # schedule for night of month
+# nurses<type 'dict'>: <str(id of nurse), Nurse> info of all nurses, come from database
+# monthInfo list of dates
+# leaveTable dict<str(date), list(ids of nurses)>
 # return monthTable<type 'dict'>: <str(date), list(<list(ids of nurses)>)> list:[groupNumPerNight][nurseNumPerGroup]
 def scheduleMonthTable(nurses, monthInfo, leaveTable) :
 	monthTable = dict()
@@ -300,7 +303,10 @@ def matchDepartment(surgery, nurse) :
 # monthTable<type 'dict'>: <str(date), list(<list(ids of nurses)>)> list:[groupNumPerNight][nurseNumPerGroup]
 # clientTable<type 'dict'>: <str(date), dict(<str(id of surgery), list(ids of nurses)>)>, come from client
 # monthInfo list of dates
-# surgeryTimeTable list<str(time), list(ids of surgeries)>
+# surgeryTimeTable dict<tuple(date,time), list(ids of surgeries)>
+# leaveTable dict<str(date), list(ids of nurses)>
+# return None if unsat
+# return result(dict) if sat
 def schedule(nurses, surgeries, monthTable, clientTable, monthInfo, surgeryTimeTable, leaveTable) :
 	solver = z3.Solver()
 	grid = dict()
@@ -329,7 +335,8 @@ def schedule(nurses, surgeries, monthTable, clientTable, monthInfo, surgeryTimeT
 				# constraint: make sure all of the nurses come from client
 				for nurseID in nurseIDs :
 					nurse = nurses[nurseID]
-					if matchDepartment(surgery, nurse) :
+					#constraint: if the nurse will leave on date , we can not schedule the nurse for the surgery on date
+					if matchDepartment(surgery, nurse) and isLeaves(nurse, date, leaveTable) == False :
 						# constraint: make sure the department of nurse matches with surgery
 						orListForDepartment.append(z3.Or(value == int(nurseID)))
 				# constraint: make sure the department of nurse matches with surgery
@@ -411,9 +418,10 @@ def schedule(nurses, surgeries, monthTable, clientTable, monthInfo, surgeryTimeT
 	pass
 
 # input: 	./db/json/nurses.json
-# 			./db/json/monthInfo.json(排夜班至少要知道这个月有多少天)
+# 			./db/json/monthInfo.json
 # 			./db/json/leaves.json
 # output: 	./z3py/schedule/generate/nightResult.json
+# 			return nightResult(dict)
 def nightSchedule() :
 	# print "Night sheduling..."
 	nurses = getNurses(rootPath + "db/json/nurses.json")
@@ -451,13 +459,14 @@ def nightSchedule() :
 
 
 # input:	./db/json/nurses.json
-#			./db/json/surgeries.json(手术信息)
-# 		 	./db/json/clientTable.json
+#			./db/json/surgeries.json
 # 			./db/json/monthTable.json
-#			./db/json/leaves.json
+# 		 	./db/json/clientTable.json
+# 		 	./db/json/monthInfo.json
 # 		 	./db/json/surgeryTimeTable.json
-# 		 	./db/json/monthInfo.json(这里是想要周末日期信息，因为暂时没考虑这个，认为周末也是有手术的，故而暂不考虑，暂时保留，不一定需要)
+#			./db/json/leaves.json
 # output:	./z3py/schedult/generate/nightResult.json
+#			return dayResult(dict)
 def daySchedule() :
 	# print "Day scheduling..."
 	nurses = getNurses(rootPath + "db/json/nurses.json")
