@@ -123,7 +123,7 @@ class SurgeriesController < ApplicationController
   end
 
   def backToList
-    @surgeries = selectSurgeries(processDate(session[:start_date], session[:end_date]))
+    @surgeries = selectSurgeries(processingDate(session[:start_date], session[:end_date]))
     render 'surgeries/show'
   end
 
