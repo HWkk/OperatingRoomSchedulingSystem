@@ -105,9 +105,6 @@ class SurgeriesController < ApplicationController
         surgery = Surgery.find(surgery_id.to_i)
         surgery.update(instrument_nurse_id: dayScheduleResult[date]["day"][surgery_id]["instrument"].to_i, 
           roving_nurse_id: dayScheduleResult[date]["day"][surgery_id]["roving"].to_i)
-        puts("instrument: , roving: ")
-        puts(dayScheduleResult[date]["day"][surgery_id]["instrument"])
-        puts(dayScheduleResult[date]["day"][surgery_id]["roving"])
       }
     }
   end

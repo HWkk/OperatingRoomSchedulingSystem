@@ -13,7 +13,6 @@ class SchedulesController < ApplicationController
   	nurses = Nurse.all
     time = Time.now
     departments = getDepartments()
-    puts(departments)
 
     for nurse in nurses 
       nurse.department = processDepartment(nurse.department, departments)
