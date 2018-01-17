@@ -1,0 +1,26 @@
+排班结果如下：
+<table>
+	<tbody>
+		<tr>
+			<td>日期</td>
+			<td>夜班护士1</td>
+			<td>夜班护士2</td>
+			<td>夜班护士3</td>
+			<td>后备夜班护士1</td>
+			<td>后备夜班护士2</td>
+			<td>后备夜班护士3</td>
+			<td>后备夜班护士4</td>
+			<td>后备夜班护士5</td>
+			<td>后备夜班护士6</td>
+		</tr>
+		<% @schedules.each_key { |date| %>
+			<tr>
+				<td><%= date %></td>
+				<% for nurse in @schedules[date] %>
+					<td><%= nurse %></td>
+				<% end %>
+			</tr>
+		<% } %>
+	</tbody>
+</table>
+<a href="<%= schedules_backToIndex_path %>">返回</a>

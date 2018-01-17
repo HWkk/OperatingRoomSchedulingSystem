@@ -8,5 +8,8 @@ Rails.application.routes.draw do
   get 'surgeries/run', to:"surgeries#runAlgorithm"
   get 'surgeries/backToIndex', to:"surgeries#backToIndex"
   get 'surgeries/backToList', to:"surgeries#backToList"
-  post 'surgeries/nightSchedule', to:"surgeries#nightSchedule"
+  post 'schedules/nightSchedule', to:"schedules#nightSchedule"
+  get 'schedules/backToIndex', to:"schedules#backToIndex"
+
+  root 'schedules#firstShow'
 end
