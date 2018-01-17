@@ -92,10 +92,24 @@ class SurgeriesController < ApplicationController
 
   def runAlgorithm
     load('./app/tools/z3interface/schedule.rb')
-    dayScheduleResult = daySchedulez3()
-    puts(dayScheduleResult)
+    daySchedulez3()
+    dayScheduleResult = JSON.parse(File.read("./z3py/generate/json/dayResult.json"))
+    updateSurgeries(dayScheduleResult)
     @surgeries = selectSurgeries(processDate(session[:start_date], session[:end_date]))
     render 'surgeries/show'
+  end
+
+  def updateSurgeries(dayScheduleResult)
+    dayScheduleResult.each_key { |date|
+      dayScheduleResult[date]["day"].each_key { |surgery_id|
+        surgery = Surgery.find(surgery_id.to_i)
+        surgery.update(instrument_nurse_id: dayScheduleResult[date]["day"][surgery_id]["instrument"].to_i, 
+          roving_nurse_id: dayScheduleResult[date]["day"][surgery_id]["roving"].to_i)
+        puts("instrument: , roving: ")
+        puts(dayScheduleResult[date]["day"][surgery_id]["instrument"])
+        puts(dayScheduleResult[date]["day"][surgery_id]["roving"])
+      }
+    }
   end
 
   def backToIndex
@@ -109,7 +123,7 @@ class SurgeriesController < ApplicationController
   end
 
   def backToList
-    @surgeries = selectSurgeries(processingDate(session[:start_date], session[:end_date]))
+    @surgeries = selectSurgeries(processDate(session[:start_date], session[:end_date]))
     render 'surgeries/show'
   end
 

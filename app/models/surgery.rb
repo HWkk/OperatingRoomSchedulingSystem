@@ -15,7 +15,9 @@ class Surgery < ApplicationRecord
 
 		ids = nurses_id.split(",")
 		for id in ids
-			nurses.push(Nurse.find(id).name)
+			if(Nurse.exists?(id))
+				nurses.push(Nurse.find(id).name)
+			end
 		end
 		return nurses
 	end
