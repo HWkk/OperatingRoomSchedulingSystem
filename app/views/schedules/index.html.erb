@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+  <title>Bootstrap 101 Template</title>
+
+  <!-- Bootstrap -->
+  <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+	<script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+	<script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+    <%= form_tag(controller: "surgeries", action: "show", method: "post") do %>
+    <%= tag(:input, :type => "hidden", :name => request_forgery_protection_token.to_s, :value => form_authenticity_token) %>
+    <p>开始日期：<%= select_date Date.today, prefix: :start_date %></p>
+    <p>结束日期：<%= select_date Date.today, prefix: :end_date %></p>
+  <%= submit_tag("手动排白班") %>
+<% end %>
+<p></p>
+<%= form_tag(controller: "schedules", action: "nightSchedule", method: "post") do %>
+    <%= tag(:input, :type => "hidden", :name => request_forgery_protection_token.to_s, :value => form_authenticity_token) %>
+    <p>选择月份：<%= select_date Date.today, order: [:year, :month], prefix: :night_schedule %></p>
+  <%= submit_tag("排夜班") %>
+<% end %>
+</body>
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src='jquery.min.js'></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="bootstrap/js/bootstrap.min.js"></script></html>
