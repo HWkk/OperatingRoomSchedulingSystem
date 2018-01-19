@@ -1,6 +1,6 @@
 class SchedulesController < ApplicationController
   protect_from_forgery with: :exception
-  def index
+  def test
   end
 
   def firstShow

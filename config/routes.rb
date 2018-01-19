@@ -11,7 +11,7 @@ Rails.application.routes.draw do
   post 'schedules/nightSchedule', to:"schedules#nightSchedule"
   get 'schedules/backToIndex', to:"schedules#backToIndex"
 
-  get 'schedules/index', to:"schedules#index"
+  get 'schedules/test', to:"schedules#test"
   # root 'schedules#firstShow'
-  root 'schedules#index'
+  root 'schedules#test'
 end
