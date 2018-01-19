@@ -12,6 +12,6 @@ Rails.application.routes.draw do
   get 'schedules/backToIndex', to:"schedules#backToIndex"
 
   get 'schedules/test', to:"schedules#test"
-  # root 'schedules#firstShow'
-  root 'schedules#test'
+  root 'schedules#firstShow'
+  # root 'schedules#test'
 end

@@ -8,7 +8,7 @@
   <title>Bootstrap 101 Template</title>
 
   <!-- Bootstrap -->
-  <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
   <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -27,8 +27,10 @@
             <p>开始日期：<%= select_date Date.today, prefix: :start_date %></p>
             <p>结束日期：<%= select_date Date.today, prefix: :end_date %></p>
             <button type='submit' class='btn btn-primary'>手动排白班</button>
-            <button type='submit' class='btn btn-primary'>自动排白班</button>
         <% end %>
+            <form action="#">
+                <button type='submit' class='btn btn-primary'>自动排白班</button>
+            </form>
         <%= form_tag(controller: "schedules", action: "nightSchedule", method: "post") do %>
             <%= tag(:input, :type => "hidden", :name => request_forgery_protection_token.to_s, :value => form_authenticity_token) %>
             <p>选择月份：<%= select_date Date.today, order: [:year, :month], prefix: :night_schedule %></p>
@@ -37,6 +39,6 @@
     </center>
 </body>
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-<script src='jquery.min.js'></script>
+<script src='/jquery.min.js'></script>
 <!-- Include all compiled plugins (below), or include individual files as needed -->
-<script src="bootstrap/js/bootstrap.min.js"></script></html>
+<script src="/bootstrap/js/bootstrap.min.js"></script></html>
