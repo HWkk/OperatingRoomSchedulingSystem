@@ -9,6 +9,18 @@
 
   <!-- Bootstrap -->
   <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <script type="text/javascript">
+    $(document).ready(function() {
+        $('#manual').click(function(){
+            $('#form1').attr('action', "show");
+            $('#form1').submit();
+        });
+        $('#automatic').click(function(){
+            $('#form1').attr('action', "autoRun");
+            $('#form1').submit();
+        });
+    });
+ </script>
 
   <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -20,17 +32,19 @@
 <body>
     <center>
         <h2>排班系统</h2>
-        <%= form_tag(controller: "surgeries", action: "show", method: "post") do %>
+        <% if(flash[:date_notice])%>
+          <font color="red"><%= flash[:date_notice] %></font>
+        <% end %>
+        <%= form_tag(id: "form1", controller: "surgeries", action: "show", method: "post") do %>
             <div class='form-group'>
                 <%= tag(:input, :type => "hidden", :name => request_forgery_protection_token.to_s, :value => form_authenticity_token) %>
             </div>
             <p>开始日期：<%= select_date Date.today, prefix: :start_date %></p>
             <p>结束日期：<%= select_date Date.today, prefix: :end_date %></p>
-            <button type='submit' class='btn btn-primary'>手动排白班</button>
+
+            <button type='submit' class='btn btn-primary' id="manual">手动排白班</button>
+            <button type='submit' class='btn btn-primary' id="automatic">自动排白班</button>
         <% end %>
-            <form action="#">
-                <button type='submit' class='btn btn-primary'>自动排白班</button>
-            </form>
         <%= form_tag(controller: "schedules", action: "nightSchedule", method: "post") do %>
             <%= tag(:input, :type => "hidden", :name => request_forgery_protection_token.to_s, :value => form_authenticity_token) %>
             <p>选择月份：<%= select_date Date.today, order: [:year, :month], prefix: :night_schedule %></p>
@@ -38,6 +52,7 @@
         <% end %>
     </center>
 </body>
+
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src='/jquery.min.js'></script>
 <!-- Include all compiled plugins (below), or include individual files as needed -->

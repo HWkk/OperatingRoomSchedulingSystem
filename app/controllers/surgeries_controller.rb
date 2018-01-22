@@ -5,16 +5,26 @@ class SurgeriesController < ApplicationController
   protect_from_forgery prepend: true, with: :exception
 
   def show
-    start_date = params[:start_date][:year] + "-" + params[:start_date][:month] + "-" + params[:start_date][:day]
-    end_date = params[:end_date][:year] + "-" + params[:end_date][:month] + "-" + params[:end_date][:day]
-    session[:start_date] = start_date
-    session[:end_date] = end_date
+    if(!session[:start_date].nil?)
+      start_date = session[:start_date]
+      end_date = session[:end_date]
+    else
+      start_date = params[:start_date][:year] + "-" + params[:start_date][:month] + "-" + params[:start_date][:day]
+      end_date = params[:end_date][:year] + "-" + params[:end_date][:month] + "-" + params[:end_date][:day]
+    end
     dates = processDate(start_date, end_date)
-
-    @surgeries = selectSurgeries(dates)
-    initialClientTableJson(dates)
-    initialSurgeriesJson(@surgeries)
-  	render 'surgeries/show'
+    if(dates.length == 0)
+      flash[:date_notice] = "日期选择不合法"
+      render 'schedules/show'
+    else
+      session[:start_date] = start_date
+      session[:end_date] = end_date
+      flash[:date_notice] = nil
+      @surgeries = selectSurgeries(dates)
+      initialClientTableJson(dates)
+      initialSurgeriesJson(@surgeries)
+    	render 'surgeries/show'
+    end
   end
 
   def selectSurgeries(dates) 
@@ -67,11 +77,19 @@ class SurgeriesController < ApplicationController
   end
 
   def addNurse
-    surgery_id = params[:surgery_id]
-    surgery_date = Surgery.find(surgery_id).date.to_s
-    modifyClientTable(params[:nurse], surgery_id, surgery_date)
-    @surgeries = selectSurgeries(processDate(session[:start_date], session[:end_date]))
-    render 'surgeries/show'
+    if(params[:nurse].length <= 1)
+      @surgery = Surgery.find(params[:surgery_id])
+      @nurses = Nurse.all
+      flash[:nurse_notice] = "请至少选择两个护士"
+      render 'surgeries/schedule'
+    else
+      surgery_id = params[:surgery_id]
+      surgery_date = Surgery.find(surgery_id).date.to_s
+      modifyClientTable(params[:nurse], surgery_id, surgery_date)
+      @surgeries = selectSurgeries(processDate(session[:start_date], session[:end_date]))
+      flash[:nurse_notice] = nil
+      render 'surgeries/show'
+    end
   end
 
   def modifyClientTable(nurses_id, surgery_id, surgery_date)
@@ -90,13 +108,33 @@ class SurgeriesController < ApplicationController
     File.new("./db/json/clientTable.json", "w").syswrite(JSON.pretty_generate(clientTable.as_json))
   end
 
+  def autoRun
+    start_date = params[:start_date][:year] + "-" + params[:start_date][:month] + "-" + params[:start_date][:day]
+    end_date = params[:end_date][:year] + "-" + params[:end_date][:month] + "-" + params[:end_date][:day]
+    session[:start_date] = start_date
+    session[:end_date] = end_date
+    dates = processDate(start_date, end_date)
+    @surgeries = selectSurgeries(dates)
+    initialClientTableJson(dates)
+    initialSurgeriesJson(@surgeries)
+    runAlgorithm()
+    render 'surgeries/show'
+  end
+
   def runAlgorithm
     load('./app/tools/z3interface/schedule.rb')
-    daySchedulez3()
-    dayScheduleResult = JSON.parse(File.read("./z3py/generate/json/dayResult.json"))
-    updateSurgeries(dayScheduleResult)
-    @surgeries = selectSurgeries(processDate(session[:start_date], session[:end_date]))
-    render 'surgeries/show'
+    result = daySchedulez3()
+    if(result.eql?("None"))
+      @surgeries = selectSurgeries(processDate(session[:start_date], session[:end_date]))
+      flash[:schedule_notice] = "无可用结果，请重新选择护士进行排班"
+      render 'surgeries/show'
+    else
+      dayScheduleResult = JSON.parse(File.read("./z3py/generate/json/dayResult.json"))
+      updateSurgeries(dayScheduleResult)
+      @surgeries = selectSurgeries(processDate(session[:start_date], session[:end_date]))
+      flash[:schedule_notice] = "排班成功"
+      render 'surgeries/show'
+    end
   end
 
   def updateSurgeries(dayScheduleResult)

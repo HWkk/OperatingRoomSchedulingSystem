@@ -72,7 +72,6 @@ function reserveCheck(name){
 		</tr>
 	</tbody>
 </table>
-
 <%= form_tag("addNurse", method: "post") do %>
 	<input name="surgery_id" type="hidden" value="<%= @surgery.id %>"></input>
 	<%= tag(:input, :type => "hidden", :name => request_forgery_protection_token.to_s, :value => form_authenticity_token) %> 
@@ -83,6 +82,9 @@ function reserveCheck(name){
 	<% end %>
 	<p></p>
   <%= submit_tag("提交") %>
+  <% if(flash[:nurse_notice])%>
+   <font color="red"><%= flash[:nurse_notice] %></font>
+  <% end %>
 <% end %>
 <a href="javascript:allCheck('nurse[]',true)">全选</a>   
 <a href="javascript:allCheck('nurse[]',false)">全不选</a>   

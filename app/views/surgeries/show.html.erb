@@ -20,73 +20,77 @@
 <body>
 	<center width="640">
 		<h2>手术列表</h2>
-		<table class='table table-bordered'>
-			<tbody>
-				<tr>
-					<td>手术日期</td>
-					<td>手术名称</td>
-					<td>手术开始时间</td>
-					<td>手术房间</td>
-					<td>床位</td>
-					<td>患者住院号</td>
-					<td>所属专科</td>
-					<td>麻醉方式</td>
-					<td>主治医生</td>
-					<td>器械护士</td>
-					<td>巡回护士</td>
-					<td>进行排班</td>
-				</tr>
-				<% for surgery in @surgeries %>
-					<tr>
-						<td><%= surgery.date %></td>
-						<td><%= surgery.surgery_name %></td>
-						<td><%= surgery.time[0,2] %>:<%= surgery.time[2,4] %></td>
-						<td><%= surgery.room %></td>
-						<td><%= surgery.table %></td>
-
-						<% patient = surgery.getPatient(surgery.patient_id) %>
-						<td><%= patient.hospitalized_number %></td>
-						<td><%= surgery.department %></td>
-						<td><%= surgery.anesthesia_method %></td>
-
-						<% doctor = surgery.getDoctor(surgery.doctor_id) %>
-						<td><%= doctor.name %></td>
-
-						<% instrument_nurses = surgery.getNurses(surgery.instrument_nurse_id) %>
-						<% if(instrument_nurses.length == 0) %>
-							<td>无</td>
-						<% else %>
-							<td>
-								<% for name in instrument_nurses %>
-									<%= "#{name} " %>
-								<% end %>
-							</td>
-						<% end %>
-
-						<% roving_nurses = surgery.getNurses(surgery.roving_nurse_id) %>
-						<% if(roving_nurses.length == 0) %>
-							<td>无</td>
-						<% else %>
-							<td>
-								<% for name in roving_nurses %>
-									<%= "#{name} " %>
-								<% end %>
-							</td>
-						<% end %>
-						<td><a href="<%= surgeries_daySchedule_path %>?surgery_id=<%= surgery.id %>" >排班</a></td>
-					</tr>
-				<% end %>
-			</tbody>
-		</table>
-		<p></p>
 		<% if(@surgeries.length > 0) %>
-		<% date = @surgeries[0].date %>
-			<a href="<%= surgeries_run_path %>?date=<%= date %>" >已经选好所有护士，请进行排班</a>
+		 <% if(flash[:schedule_notice])%>
+   			<font color="red"><%= flash[:schedule_notice] %></font>
+  		 <% end %>
+			<table class='table table-bordered'>
+				<tbody>
+					<tr>
+						<td>手术日期</td>
+						<td>手术名称</td>
+						<td>手术开始时间</td>
+						<td>手术房间</td>
+						<td>床位</td>
+						<td>患者住院号</td>
+						<td>所属专科</td>
+						<td>麻醉方式</td>
+						<td>主治医生</td>
+						<td>器械护士</td>
+						<td>巡回护士</td>
+						<td>进行排班</td>
+					</tr>
+					<% for surgery in @surgeries %>
+						<tr>
+							<td><%= surgery.date %></td>
+							<td><%= surgery.surgery_name %></td>
+							<td><%= surgery.time[0,2] %>:<%= surgery.time[2,4] %></td>
+							<td><%= surgery.room %></td>
+							<td><%= surgery.table %></td>
+
+							<% patient = surgery.getPatient(surgery.patient_id) %>
+							<td><%= patient.hospitalized_number %></td>
+							<td><%= surgery.department %></td>
+							<td><%= surgery.anesthesia_method %></td>
+
+							<% doctor = surgery.getDoctor(surgery.doctor_id) %>
+							<td><%= doctor.name %></td>
+
+							<% instrument_nurses = surgery.getNurses(surgery.instrument_nurse_id) %>
+							<% if(instrument_nurses.length == 0) %>
+								<td>无</td>
+							<% else %>
+								<td>
+									<% for name in instrument_nurses %>
+										<%= "#{name} " %>
+									<% end %>
+								</td>
+							<% end %>
+
+							<% roving_nurses = surgery.getNurses(surgery.roving_nurse_id) %>
+							<% if(roving_nurses.length == 0) %>
+								<td>无</td>
+							<% else %>
+								<td>
+									<% for name in roving_nurses %>
+										<%= "#{name} " %>
+									<% end %>
+								</td>
+							<% end %>
+							<td><a href="<%= surgeries_daySchedule_path %>?surgery_id=<%= surgery.id %>" >选择我需要的护士</a></td>
+						</tr>
+					<% end %>
+                    <p></p>
+				</tbody>
+			</table>
+			<% date = @surgeries[0].date %>
+				<a href="<%= surgeries_run_path %>?date=<%= date %>" >已经选好所有护士，请进行排班/重新排班</a>
+			<p></p>
+		<% else %>
+			当前日期无手术，请选择其他日期进行排班
+			<p></p>
 		<% end %>
-		<p></p>
-		<form action="<%= surgeries_backToIndex_path %>">
-			<button type='submit' class='btn btn-primary'>返回</button>
-		</form>
+		<a href="<%= surgeries_backToIndex_path %>">返回</a>
 	</center>
 </body>
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
