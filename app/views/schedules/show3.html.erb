@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+  <title>Bootstrap 101 Template</title>
+
+  <!-- Bootstrap -->
+  <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <script type="text/javascript">
+    $(document).ready(function() {
+        $('#manual').click(function(){
+            $('#form1').attr('action', "show");
+            $('#form1').submit();
+        });
+        $('#automatic').click(function(){
+            $('#form1').attr('action', "autoRun");
+            $('#form1').submit();
+        });
+    });
+ </script>
+
+  <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+	<script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+	<script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+    <center>
+        <h2>排班系统</h2>
+        <% if(flash[:date_notice])%>
+          <font color="red"><%= flash[:date_notice] %></font>
+        <% end %>
+        <%= form_tag(id: "form1", controller: "surgeries", action: "show", method: "post") do %>
+            <div class='form-group'>
+                <%= tag(:input, :type => "hidden", :name => request_forgery_protection_token.to_s, :value => form_authenticity_token) %>
+            </div>
+            <p>开始日期：<%= select_date Date.today, prefix: :start_date %></p>
+            <p>结束日期：<%= select_date Date.today, prefix: :end_date %></p>
+
+            <button type='submit' class='btn btn-primary' id="manual">手动排白班</button>
+            <button type='submit' class='btn btn-primary' id="automatic">自动排白班</button>
+        <% end %>
+        <%= form_tag(controller: "schedules", action: "nightSchedule", method: "post") do %>
+            <%= tag(:input, :type => "hidden", :name => request_forgery_protection_token.to_s, :value => form_authenticity_token) %>
+            <p>选择月份：<%= select_date Date.today, order: [:year, :month], prefix: :night_schedule %></p>
+            <button type='submit' class='btn btn-primary'>排夜班</button>
+        <% end %>
+    </center>
+</body>
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src='/jquery.min.js'></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="/bootstrap/js/bootstrap.min.js"></script></html>
