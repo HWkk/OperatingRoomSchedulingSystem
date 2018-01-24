@@ -27,3 +27,25 @@ Rails.application.config.assets.precompile += %w( jquery-ui-sliderAccess.js )
 Rails.application.config.assets.precompile += %w( datepicker-zh.js )
 Rails.application.config.assets.precompile += %w( fullcalendar.js )
 Rails.application.config.assets.precompile += %w( jquery-ui.min1.9.1.js )
+
+
+Rails.application.config.assets.precompile += %w( jquery.js )
+Rails.application.config.assets.precompile += %w( jquery-1.8.3.min.js )
+Rails.application.config.assets.precompile += %w( bootstrap.min.js )
+Rails.application.config.assets.precompile += %w( jquery.dcjqaccordion.2.7.js )
+Rails.application.config.assets.precompile += %w( jquery.scrollTo.min.js )
+Rails.application.config.assets.precompile += %w( jquery.nicescroll.js )
+Rails.application.config.assets.precompile += %w( jquery.sparkline.js )
+Rails.application.config.assets.precompile += %w( common-scripts.js )
+Rails.application.config.assets.precompile += %w( jquery.gritter.js )
+Rails.application.config.assets.precompile += %w( gritter-conf.js )
+Rails.application.config.assets.precompile += %w( sparkline-chart.js )
+Rails.application.config.assets.precompile += %w( zabuto_calendar.js )
+
+
+
+Rails.application.config.assets.precompile += %w( style.css )
+
+Rails.application.config.assets.precompile += %w( style-responsive.css)
+
+Rails.application.config.assets.precompile += %w( bootstrap.css )
