@@ -31,7 +31,6 @@
     <%= stylesheet_link_tag "style-responsive.css" %>
 
 
-
   </head>
 
   <body>
@@ -80,12 +79,7 @@
                           <li><a  href="buttons.html">白班列表</a></li>
                           <li><a  href="/schedules/nightSchedule">夜班列表</a></li>
                       </ul>
-                  </li>
-
-                
-                 
-                
-              
+                  </li>     
               </ul>
               <!-- sidebar menu end-->
           </div>
@@ -98,9 +92,49 @@
       *********************************************************************************************************************************************************** -->
       <!--main content start-->
       <section id="main-content">
+
           <section class="wrapper">
+
+            <section >
+
+                <div class="col-md-2 col-sm-4 col-md-offset-2 box0">
+                  <div class="box1">
+                    <span class="li_heart"></span>
+                    <h4>当值医生数</h4>
+                    <h4>52</h4>
+                  </div>
+                  <p>Online Doctors 32</p>
+                </div>
+                <div class="col-md-2 col-sm-3 box0">
+                  <div class="box1">
+                    <span class="li_cloud"></span>
+                    <h4>当值护士数</h4>
+                    <h4>87</h4>
+                  </div>
+                  <p>Online Nurses 87</p>
+                </div>
+                <div class="col-md-2 col-sm-3 box0">
+                  <div class="box1">
+                    <span class="li_stack"></span>
+                    <h4>在线手术数</h4>
+                    <h4>5</h4>
+                  </div>
+                  <p>Online Surgeries 5</p>
+                </div>
+                <div class="col-md-2 col-sm-3 box0">
+                <div class="box1">
+                  <span class="li_stack"></span>
+                  <h4>备用护士数</h4>
+                  <h4>234</h4>
+                </div>
+                <p>Nurses 234</p>
+              </div>
+
+            </section>
+
 			  <center>
-		
+
+
           <% if(flash[:date_notice])%>
           <font color="red"><%= flash[:date_notice] %></font>
           <% end %>
@@ -123,13 +157,9 @@
           <% end %>
           </div>
           <div id="right" style="float:left ;  width:50%; height:100%;">
-          
-
           <h3>夜班排班</h3>  
           <div style="visibility:hidden" >
-
-            占位
-
+              占位
             </div>
           <%= form_tag(controller: "schedules", action: "nightSchedule", method: "post") do %>
           <%= tag(:input, :type => "hidden", :name => request_forgery_protection_token.to_s, :value => form_authenticity_token) %>
@@ -140,9 +170,15 @@
           <button type='submit' class='btn btn-primary'>排夜班</button>
           <% end %>
           </div>
+
+
+
+
+
+
           </div>
 
-				  
+				
 			  </center>
 
           </section>
