@@ -109,10 +109,13 @@ class SurgeriesController < ApplicationController
   end
 
   def autoRun
-    start_date = params[:start_date][:year] + "-" + params[:start_date][:month] + "-" + params[:start_date][:day]
-    end_date = params[:end_date][:year] + "-" + params[:end_date][:month] + "-" + params[:end_date][:day]
-    session[:start_date] = start_date
-    session[:end_date] = end_date
+     if(!session[:start_date].nil?)
+      start_date = session[:start_date]
+      end_date = session[:end_date]
+    else
+      start_date = params[:start_date][:year] + "-" + params[:start_date][:month] + "-" + params[:start_date][:day]
+      end_date = params[:end_date][:year] + "-" + params[:end_date][:month] + "-" + params[:end_date][:day]
+    end
     dates = processDate(start_date, end_date)
     @surgeries = selectSurgeries(dates)
     initialClientTableJson(dates)
