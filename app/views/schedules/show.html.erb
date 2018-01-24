@@ -30,6 +30,19 @@
     <%= stylesheet_link_tag "style.css" %>
     <%= stylesheet_link_tag "style-responsive.css" %>
 
+    <script type="text/javascript">
+    $(document).ready(function() {
+        $('#manual').click(function(){
+            $('#form1').attr('action', "show");
+            $('#form1').submit();
+        });
+        $('#automatic').click(function(){
+            $('#form1').attr('action', "autoRun");
+            $('#form1').submit();
+        });
+    });
+  </script>
+
 
   </head>
 
@@ -133,11 +146,6 @@
             </section>
 
 			  <center>
-
-
-          <% if(flash[:date_notice])%>
-          <font color="red"><%= flash[:date_notice] %></font>
-          <% end %>
           <div id="main" style="width:800px;  height:400px;">
           <div id="left" style="float:left ;  width:50%;  height:100%;">
       
@@ -151,7 +159,9 @@
          
           <p>开始日期：<%= select_date Date.today, prefix: :start_date %></p>
           <p>结束日期：<%= select_date Date.today, prefix: :end_date %></p>
-
+          <% if(flash[:date_notice])%>
+            <p><font color="red"><%= flash[:date_notice] %></font></p>
+          <% end %>
           <button type='submit' class='btn btn-primary' id="manual">手动排白班</button>
           <button type='submit' class='btn btn-primary' id="automatic">自动排白班</button>
           <% end %>
