@@ -5,16 +5,30 @@ class SurgeriesController < ApplicationController
   protect_from_forgery prepend: true, with: :exception
 
   def show
+    if(params[:commit] == "手动排白班")
+      autoOrManualRun(params[:start_date], params[:end_date], false)
+    else
+      autoOrManualRun(params[:start_date], params[:end_date], true)
+    end
+  end
+
+  def autoOrManualRun(startD, endD, autoOrManual)
     if(!session[:start_date].nil?)
       start_date = session[:start_date]
       end_date = session[:end_date]
     else
-      start_date = params[:start_date][:year] + "-" + params[:start_date][:month] + "-" + params[:start_date][:day]
-      end_date = params[:end_date][:year] + "-" + params[:end_date][:month] + "-" + params[:end_date][:day]
+      start_date = startD[:year] + "-" + startD[:month] + "-" + startD[:day]
+      end_date = endD[:year] + "-" + endD[:month] + "-" + endD[:day]
     end
     dates = processDate(start_date, end_date)
     if(dates.length == 0)
       flash[:date_notice] = "日期选择不合法"
+      render 'schedules/show'
+    elsif (!validateDateIsInOneMonth(dates))
+      flash[:date_notice] = "目前不支持跨月排白班，请选择一个月内的日期进行排班"
+      render 'schedules/show'
+    elsif (!validateDateHasNightResult(dates))
+      flash[:date_notice] = "您还没有排当月的夜班，请先排当月的夜班再排白班"
       render 'schedules/show'
     else
       session[:start_date] = start_date
@@ -23,8 +37,31 @@ class SurgeriesController < ApplicationController
       @surgeries = selectSurgeries(dates)
       initialClientTableJson(dates)
       initialSurgeriesJson(@surgeries)
-    	render 'surgeries/show'
+      if(autoOrManual == true)
+        runAlgorithm()
+      else
+        render 'surgeries/show'
+      end
     end
+  end
+
+  def validateDateIsInOneMonth(dates)
+    month = dates[0].month
+    for date in dates
+      if(date.month != month)
+        return false
+      end
+    end
+    return true
+  end
+
+  def validateDateHasNightResult(dates)
+    for date in dates
+      if(NightSchedule.find_by(date: date) == nil)
+        return false
+      end
+    end
+    return true
   end
 
   def selectSurgeries(dates) 
@@ -108,26 +145,10 @@ class SurgeriesController < ApplicationController
     File.new("./db/json/clientTable.json", "w").syswrite(JSON.pretty_generate(clientTable.as_json))
   end
 
-  def autoRun
-     if(!session[:start_date].nil?)
-      start_date = session[:start_date]
-      end_date = session[:end_date]
-    else
-      start_date = params[:start_date][:year] + "-" + params[:start_date][:month] + "-" + params[:start_date][:day]
-      end_date = params[:end_date][:year] + "-" + params[:end_date][:month] + "-" + params[:end_date][:day]
-    end
-    dates = processDate(start_date, end_date)
-    @surgeries = selectSurgeries(dates)
-    initialClientTableJson(dates)
-    initialSurgeriesJson(@surgeries)
-    runAlgorithm()
-    render 'surgeries/show'
-  end
-
   def runAlgorithm
     load('./app/tools/z3interface/schedule.rb')
     result = daySchedulez3()
-    if(result.eql?("None"))
+    if(result == "None")
       @surgeries = selectSurgeries(processDate(session[:start_date], session[:end_date]))
       flash[:schedule_notice] = "无可用结果，请重新选择护士进行排班"
       render 'surgeries/show'

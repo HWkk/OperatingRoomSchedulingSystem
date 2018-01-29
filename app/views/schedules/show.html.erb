@@ -29,21 +29,6 @@
 
     <%= stylesheet_link_tag "style.css" %>
     <%= stylesheet_link_tag "style-responsive.css" %>
-
-    <script type="text/javascript">
-    $(document).ready(function() {
-        $('#manual').click(function(){
-            $('#form1').attr('action', "show");
-            $('#form1').submit();
-        });
-        $('#automatic').click(function(){
-            $('#form1').attr('action', "autoRun");
-            $('#form1').submit();
-        });
-    });
-  </script>
-
-
   </head>
 
   <body>
@@ -151,7 +136,7 @@
       
            <h3>白班排班</h3>
          
-          <%= form_tag(id: "form1", controller: "surgeries", action: "show", method: "post") do %>
+          <%= form_tag(controller: "surgeries", action: "show", method: "post") do %>
         
           <div class='form-group'>
             <%= tag(:input, :type => "hidden", :name => request_forgery_protection_token.to_s, :value => form_authenticity_token) %>
@@ -162,8 +147,8 @@
           <% if(flash[:date_notice])%>
             <p><font color="red"><%= flash[:date_notice] %></font></p>
           <% end %>
-          <button type='submit' class='btn btn-primary' id="manual">手动排白班</button>
-          <button type='submit' class='btn btn-primary' id="automatic">自动排白班</button>
+          <input type='submit' class='btn btn-primary' name="commit" value="手动排白班"/>
+          <input type='submit' class='btn btn-primary' name="commit" value="自动排白班"/>
           <% end %>
           </div>
           <div id="right" style="float:left ;  width:50%; height:100%;">
@@ -179,14 +164,6 @@
           </div>
           <button type='submit' class='btn btn-primary'>排夜班</button>
           <% end %>
-          </div>
-
-
-
-
-
-
-          </div>
 
 				
 			  </center>
@@ -230,19 +207,6 @@
 
 
   </body>
-
-    <script type="text/javascript">
-    $(document).ready(function() {
-        $('#manual').click(function(){
-            $('#form1').attr('action', "show");
-            $('#form1').submit();
-        });
-        $('#automatic').click(function(){
-            $('#form1').attr('action', "autoRun");
-            $('#form1').submit();
-        });
-    });
- </script>
     <%= javascript_include_tag "jquery.js" %>
     <%= javascript_include_tag "jquery-1.8.3.min.js" %>
     <%= javascript_include_tag "bootstrap.min.js" %>

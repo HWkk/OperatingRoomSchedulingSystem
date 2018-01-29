@@ -3,8 +3,6 @@ Rails.application.routes.draw do
   get 'schedules/show', to:"schedules#show"
   get 'surgeries/show', to:"surgeries#show"
   post 'surgeries/show', to:"surgeries#show"
-  get 'surgeries/autoRun', to:"surgeries#autoRun"
-  post 'surgeries/autoRun', to:"surgeries#autoRun"
   get 'surgeries/daySchedule', to:"surgeries#daySchedule"
   get 'surgeries/addNurse', to:"surgeries#addNurse"
   post 'surgeries/addNurse', to:"surgeries#addNurse"
