@@ -12,6 +12,21 @@ class SurgeriesController < ApplicationController
     end
   end
 
+  def surgeriesList
+    today = Time.new
+    start_date = (today.year).to_s + "-" + today.month.to_s + "-01"
+    if(today.month !=12)
+      end_date = today.year.to_s + "-" + (today.month + 1).to_s + "-01"
+    else
+      end_date = (today.year+1).to_s + "-01-01"
+    end
+    dates = processDate(start_date, end_date)
+    @surgeries = selectSurgeries(dates)
+    initialClientTableJson(dates)
+    initialSurgeriesJson(@surgeries)
+    render 'surgeries/show' 
+  end
+
   def autoOrManualRun(startD, endD, autoOrManual)
     if(!session[:start_date].nil?)
       start_date = session[:start_date]
