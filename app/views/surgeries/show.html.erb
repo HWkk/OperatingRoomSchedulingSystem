@@ -105,13 +105,13 @@
 							</tbody>
 						</table>
 						<% date = @surgeries[0].date %>
-						<a href="<%= surgeries_run_path %>?date=<%= date %>" >已经选好所有护士，请进行排班/重新排班</a>
+						<a href="<%= surgeries_run_path %>?date=<%= date %>" ><button >已经选好所有护士，请进行排班/重新排班</button></a>
 						<p></p>
 				<% else %>
 						当前日期无手术，请选择其他日期进行排班
 						<p></p>
 				<% end %>
-				<a href="<%= surgeries_backToIndex_path %>">返回</a>
+				<a href="<%= surgeries_backToIndex_path %>"><button class='btn btn-primary'>返回</button></a>
 			</center>
 
 		</section>
