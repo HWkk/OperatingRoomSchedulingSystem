@@ -14,6 +14,9 @@ Rails.application.routes.draw do
   get 'schedules/backToIndex', to:"schedules#backToIndex"
   get 'schedules/backToIndex', to:"schedules#backToIndex"
   post 'schedules/backToIndex', to:"schedules#backToIndex"
+  
+  get 'schedules/nightSchedule/show', to:"schedules#nightScheduleShow" 
+
 
   get 'schedules/test', to:"schedules#test"
   root "schedules#firstShow"

@@ -64,6 +64,32 @@ class SchedulesController < ApplicationController
     render 'schedules/nightSchedule'
   end
 
+  def nightScheduleShow
+    dates = processNightScheduleDateShow()
+    File.new("./db/json/monthInfo.json", "w").syswrite(JSON.pretty_generate(dates.as_json))
+    load('./app/tools/z3interface/schedule.rb')
+    nightSchedulez3()
+    nightScheduleResult = JSON.parse(File.read("./z3py/generate/json/nightResult.json"))
+    updateNightSchedule(nightScheduleResult)
+    @schedules = findSchedules(dates)
+    render 'schedules/nightSchedule'
+  end
+
+
+  def processNightScheduleDateShow()
+    today = Time.new
+    start_date = (today.year).to_s + "-" + today.month.to_s + "-01"
+    if(today.month !=12)
+      end_date = today.year.to_s + "-" + (today.month + 1).to_s + "-01"
+    else
+      end_date = (today.year+1).to_s + "-01-01"
+    end
+    dates = SurgeriesController.new.processDate(start_date, end_date)
+    dates.delete_at(dates.length - 1)
+    return dates
+  end
+
+
   def updateNightSchedule(nightScheduleResult)
     nightScheduleResult.each_key { |date|
       schedule = NightSchedule.find_by(date: date)
