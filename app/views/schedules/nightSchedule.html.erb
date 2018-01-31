@@ -16,14 +16,33 @@
 	<script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 	<script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
   <![endif]-->
+	<%= stylesheet_link_tag "bootstrap.css" %>
+
+	<%= stylesheet_link_tag "style.css" %>
+	<%= stylesheet_link_tag "style-responsive.css" %>
 </head>
 <body>
-	<div class='container'>
-		<center>
-			<h2>排班结果</h2>
-			<div style="margin-right:auto;margin-left:auto;">
-				<table class='table'>
-					<tbody>
+
+  <section id="container">
+
+		<header class="header black-bg">
+			<div class="sidebar-toggle-box">
+				<div class="fa fa-bars tooltips" data-placement="right" data-original-title="Toggle Navigation"></div>
+			</div>
+			<!--logo start-->
+			<a href="/" class="logo"><b>手术室排班系统</b></a>
+			<!--logo end-->
+
+		</header>
+		<section >
+			<section class = "wrapper">
+
+				<center width = "100%">
+
+					<h3>排班结果</h3>
+
+					<table class='table table-bordered'  width ="100%">
+						<tbody>
 						<tr class="bg-primary">
 							<td>日期</td>
 							<td>夜班护士1</td>
@@ -37,23 +56,45 @@
 							<td>后备夜班护士6</td>
 						</tr>
 						<% @schedules.each_key { |date| %>
-							<tr>
-								<td><%= date %></td>
-								<% for nurse in @schedules[date] %>
-									<td><%= nurse %></td>
-								<% end %>
-							</tr>
+								<tr>
+									<td><%= date %></td>
+									<% for nurse in @schedules[date] %>
+											<td><%= nurse %></td>
+									<% end %>
+								</tr>
 						<% } %>
-					</tbody>
-				</table>
-			</div>
-			<a href="<%= schedules_backToIndex_path %>">返回</a> 
-		</center>
-	</container>
-	</div>
+						</tbody>
+					</table>
+
+					<a href="<%= schedules_backToIndex_path %>">返回</a>
+
+				</center>
+
+
+			</section>
+		</section>
+
+	</section>
+
 </body>
 
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src='/jquery.min.js'></script>
 <!-- Include all compiled plugins (below), or include individual files as needed -->
-<script src="/bootstrap/js/bootstrap.min.js"></script></html>
+<script src="/bootstrap/js/bootstrap.min.js"></script>
+
+<%= javascript_include_tag "jquery.js" %>
+<%= javascript_include_tag "jquery-1.8.3.min.js" %>
+<%= javascript_include_tag "bootstrap.min.js" %>
+<%= javascript_include_tag "jquery.dcjqaccordion.2.7.js" %>
+<%= javascript_include_tag "jquery.scrollTo.min.js" %>
+<%= javascript_include_tag "jquery.nicescroll.js" %>
+<%= javascript_include_tag "jquery.sparkline.js" %>
+
+<%= javascript_include_tag "common-scripts.js" %>
+<%= javascript_include_tag "jquery.gritter.js" %>
+<%= javascript_include_tag "gritter-conf.js" %>
+<%= javascript_include_tag "sparkline-chart.js" %>
+<%= javascript_include_tag "zabuto_calendar.js" %>
+
+</html>
