@@ -20,11 +20,12 @@ class SurgeriesController < ApplicationController
     else
       end_date = (today.year+1).to_s + "-01-01"
     end
+    start_date = "2017-12-01"
     dates = processDate(start_date, end_date)
     @surgeries = selectSurgeries(dates)
     initialClientTableJson(dates)
     initialSurgeriesJson(@surgeries)
-    render 'surgeries/show' 
+    render 'surgeries/list' 
   end
 
   def autoOrManualRun(startD, endD, autoOrManual)

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+  <title>Bootstrap 101 Template</title>
+
+  <!-- Bootstrap -->
+  <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+
+	<%= stylesheet_link_tag "bootstrap.css" %>
+
+	<%= stylesheet_link_tag "style.css" %>
+	<%= stylesheet_link_tag "style-responsive.css" %>
+
+  <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+	<script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+	<script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<section id="container">
+
+
+	<header class="header black-bg">
+		<div class="sidebar-toggle-box">
+			<div class="fa fa-bars tooltips" data-placement="right" data-original-title="Toggle Navigation"></div>
+		</div>
+		<!--logo start-->
+		<a href="/" class="logo"><b>手术室排班系统</b></a>
+		<!--logo end-->
+
+	</header>
+	<section  width="100%">
+
+		<section class="wrapper">
+			<center width="100%">
+				<h2>手术列表</h2>
+				<% if(@surgeries.length > 0) %>
+						<% if(flash[:schedule_notice])%>
+								<font color="red"><%= flash[:schedule_notice] %></font>
+						<% end %>
+						<table class='table table-bordered'>
+							<tbody>
+							<tr>
+								<td>手术日期</td>
+								<td>手术名称</td>
+								<td>手术开始时间</td>
+								<td>手术房间</td>
+								<td>床位</td>
+								<td>患者住院号</td>
+								<td>所属专科</td>
+								<td>麻醉方式</td>
+								<td>主治医生</td>
+								<td>器械护士</td>
+								<td>巡回护士</td>
+								
+							</tr>
+							<% for surgery in @surgeries %>
+									<tr>
+										<td><%= surgery.date %></td>
+										<td><%= surgery.surgery_name %></td>
+										<td><%= surgery.time[0,2] %>:<%= surgery.time[2,4] %></td>
+										<td><%= surgery.room %></td>
+										<td><%= surgery.table %></td>
+
+										<% patient = surgery.getPatient(surgery.patient_id) %>
+										<td><%= patient.hospitalized_number %></td>
+										<td><%= surgery.department %></td>
+										<td><%= surgery.anesthesia_method %></td>
+
+										<% doctor = surgery.getDoctor(surgery.doctor_id) %>
+										<td><%= doctor.name %></td>
+
+										<% instrument_nurses = surgery.getNurses(surgery.instrument_nurse_id) %>
+										<% if(instrument_nurses.length == 0) %>
+												<td>无</td>
+										<% else %>
+												<td>
+													<% for name in instrument_nurses %>
+															<%= "#{name} " %>
+													<% end %>
+												</td>
+										<% end %>
+
+										<% roving_nurses = surgery.getNurses(surgery.roving_nurse_id) %>
+										<% if(roving_nurses.length == 0) %>
+												<td>无</td>
+										<% else %>
+												<td>
+													<% for name in roving_nurses %>
+															<%= "#{name} " %>
+													<% end %>
+												</td>
+										<% end %>
+									</tr>
+							<% end %>
+							<p></p>
+							</tbody>
+						</table>
+						<% date = @surgeries[0].date %>
+						<p></p>
+				<% else %>
+						当前日期无手术
+						<p></p>
+				<% end %>
+				<a href="<%= surgeries_backToIndex_path %>">返回</a>
+			</center>
+
+		</section>
+
+	</section>
+
+
+</section>
+
+</body>
+
+<%= javascript_include_tag "jquery.js" %>
+<%= javascript_include_tag "jquery-1.8.3.min.js" %>
+<%= javascript_include_tag "bootstrap.min.js" %>
+<%= javascript_include_tag "jquery.dcjqaccordion.2.7.js" %>
+<%= javascript_include_tag "jquery.scrollTo.min.js" %>
+<%= javascript_include_tag "jquery.nicescroll.js" %>
+<%= javascript_include_tag "jquery.sparkline.js" %>
+
+<%= javascript_include_tag "common-scripts.js" %>
+<%= javascript_include_tag "jquery.gritter.js" %>
+<%= javascript_include_tag "gritter-conf.js" %>
+<%= javascript_include_tag "sparkline-chart.js" %>
+<%= javascript_include_tag "zabuto_calendar.js" %>
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src='/jquery.min.js'></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="/bootstrap/js/bootstrap.min.js"></script></html>
