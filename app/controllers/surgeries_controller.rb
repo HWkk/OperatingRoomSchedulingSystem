@@ -174,18 +174,36 @@ class SurgeriesController < ApplicationController
   end
 
   def addNurse
-    if(params[:nurse].length <= 1)
-      @surgery = Surgery.find(params[:surgery_id])
-      @nurses = Nurse.all
-      flash[:nurse_notice] = "请至少选择两个护士"
-      render 'surgeries/schedule'
+    if(session[:nurse].nil?)
+      if(params[:nurse].length <= 1)
+        @surgery = Surgery.find(params[:surgery_id])
+        @nurses = Nurse.all
+        flash[:nurse_notice] = "请至少选择两个护士"
+        render 'surgeries/schedule'
+      else
+        session[:nurse] = params[:nurse]
+        session[:surgery_id] = params[:surgery_id]
+        surgery_id = params[:surgery_id]
+        surgery_date = Surgery.find(surgery_id).date.to_s
+        modifyClientTable(params[:nurse], surgery_id, surgery_date)
+        @surgeries = selectSurgeries(processDate(session[:start_date], session[:end_date]))
+        flash[:nurse_notice] = nil
+        render 'surgeries/show'
+      end
     else
-      surgery_id = params[:surgery_id]
-      surgery_date = Surgery.find(surgery_id).date.to_s
-      modifyClientTable(params[:nurse], surgery_id, surgery_date)
-      @surgeries = selectSurgeries(processDate(session[:start_date], session[:end_date]))
-      flash[:nurse_notice] = nil
-      render 'surgeries/show'
+      if(session[:nurse].length <= 1)
+        @surgery = Surgery.find(session[:surgery_id])
+        @nurses = Nurse.all
+        flash[:nurse_notice] = "请至少选择两个护士"
+        render 'surgeries/schedule'
+      else
+        surgery_id = session[:surgery_id]
+        surgery_date = Surgery.find(surgery_id).date.to_s
+        modifyClientTable(session[:nurse], surgery_id, surgery_date)
+        @surgeries = selectSurgeries(processDate(session[:start_date], session[:end_date]))
+        flash[:nurse_notice] = nil
+        render 'surgeries/show'
+      end
     end
   end
 
@@ -207,8 +225,11 @@ class SurgeriesController < ApplicationController
 
   def runAlgorithm
     load('./app/tools/z3interface/schedule.rb')
+    if(File.exist?("./z3py/generate/json/dayResult.json"))
+      File.delete("./z3py/generate/json/dayResult.json")
+    end
     result = daySchedulez3()
-    if(result == "None")
+    if(!File.exist?("./z3py/generate/json/dayResult.json"))
       @surgeries = selectSurgeries(processDate(session[:start_date], session[:end_date]))
       flash[:schedule_notice] = "无可用结果，请重新选择护士进行排班"
       render 'surgeries/show'
