@@ -61,8 +61,17 @@
                           <span>排班结果</span>
                       </a>
                       <ul class="sub">
-                          <li><a  href="/surgeries/daySchedule/show">白班列表</a></li>
-                          <li><a  href="/schedules/nightSchedule/show">夜班列表</a></li>
+                           <% if(flash[:day_notice])%>
+                           <li onclick="day_message()"><a  href="">白班列表</a></li>
+                           <% else %>
+                           <li><a  href="/surgeries/daySchedule/show">白班列表</a></li>
+                           <% end %>
+                           <% if(flash[:night_notice])%>
+                          <li onclick="night_message()"><a  href="">夜班列表</a></li>
+                          <% else %>
+                          <li ><a  href="/schedules/nightSchedule/show">夜班列表</a></li>
+                          <% end %>
+
                       </ul>
                   </li>     
               </ul>
@@ -131,6 +140,21 @@
 
 </section>
 
+
+	<script type="text/javascript">
+
+
+    function day_message(){
+
+      alert("请您先排夜班，谢谢！")
+    }
+
+    function night_message(){
+
+      alert("您还没有排夜班，谢谢！")
+    }
+
+	</script>
 </body>
 
 <%= javascript_include_tag "jquery.js" %>

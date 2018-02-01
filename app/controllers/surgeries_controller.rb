@@ -20,13 +20,19 @@ class SurgeriesController < ApplicationController
     else
       end_date = (today.year+1).to_s + "-01-01"
     end
-    start_date = "2017-12-01"
     dates = processDate(start_date, end_date)
     @surgeries = selectSurgeries(dates)
     initialClientTableJson(dates)
     initialSurgeriesJson(@surgeries)
-    render 'surgeries/list' 
+    if(!(validateDateHasNightResult(dates)))
+      flash[:day_notice] = "您还没有排当月的夜班，请先排当月的夜班再排白班"
+      flash[:night_notice] = "还没有排夜班"
+      render 'surgeries/list'
+    else
+    render 'surgeries/list'
+    end
   end
+
 
 
   def dayScheduleShow
@@ -37,12 +43,18 @@ class SurgeriesController < ApplicationController
     else
       end_date = (today.year+1).to_s + "-01-01"
     end
-    start_date = "2017-12-01"
+    
     dates = processDate(start_date, end_date)
     @surgeries = selectSurgeries(dates)
     initialClientTableJson(dates)
     initialSurgeriesJson(@surgeries)
-    render 'surgeries/dayScheduleShow' 
+    dates = processDate(start_date,end_date)
+    if(!(validateDateHasNightResult(dates)))
+      flash[:day_notice] = "您还没有排当月的夜班，请先排当月的夜班再排白班"
+      render 'surgeries/dayScheduleShow' 
+    else
+      render 'surgeries/dayScheduleShow'
+    end 
   end
 
   def autoOrManualRun(startD, endD, autoOrManual)

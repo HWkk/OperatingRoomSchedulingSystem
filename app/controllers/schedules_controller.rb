@@ -3,9 +3,25 @@ class SchedulesController < ApplicationController
   def test
   end
 
+  
   def firstShow
     initialJson()
+    today = Time.new
+    start_date = (today.year).to_s + "-" + today.month.to_s + "-01"
+    if(today.month !=12)
+      end_date = today.year.to_s + "-" + (today.month + 1).to_s + "-01"
+    else
+      end_date = (today.year+1).to_s + "-01-01"
+    end
+    
+    dates = SurgeriesController.new.processDate(start_date, end_date)
+    if(!(SurgeriesController.new.validateDateHasNightResult(dates)))
+      flash[:day_notice] = "您还没有排当月的夜班，请先排当月的夜班再排白班"
+      flash[:night_notice] = "还没有排夜班"
+      render 'schedules/show'
+    else
     render 'schedules/show'
+    end
   end
 
   def show
@@ -84,8 +100,6 @@ class SchedulesController < ApplicationController
     else
       end_date = (today.year+1).to_s + "-01-01"
     end
-    start_date = "2017-12-01"
-    end_date = "2017-12-31"
     dates = SurgeriesController.new.processDate(start_date, end_date)
     dates.delete_at(dates.length - 1)
     return dates
