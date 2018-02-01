@@ -32,32 +32,31 @@
 			<div class="fa fa-bars tooltips" data-placement="right" data-original-title="Toggle Navigation"></div>
 		</div>
 		<!--logo start-->
-		<a href="/" class="logo"><b>手术室排班系统</b></a> 
+		<a href="/" class="logo"><b>手术室排班系统</b></a>
 		<!--logo end-->
 	</header>
-	
-	<aside>
+    <aside>
           <div id="sidebar"  class="nav-collapse ">
               <!-- sidebar menu start-->
               <ul class="sidebar-menu" id="nav-accordion">
 
               	  <h5 class="centered">选择功能</h5>
               	  	
-                  <li >
+                  <li class="mt">
                       <a  href="/">
-                          <i class="fa fa-desktop"></i>
+                          <i class="fa fa-dashboard"></i>
                           <span>排班系统</span>
                       </a>
                   </li>
                   <li >
-                      <a  class="active" href="/surgeries/surgeriesList">
+                      <a  href="/surgeries/surgeriesList">
                           <i class="fa fa-dashboard"></i>
                           <span>手术列表</span>
                       </a>
                   </li>
                   <li class="sub-menu">
-                      <a href="javascript:;" >
-                          <i class="fa fa-desktop"></i>
+                      <a  class="active" href="javascript:;" >
+                          <i class="fa fa-dashboard"></i>
                           <span>排班结果</span>
                       </a>
                       <ul class="sub">
@@ -69,19 +68,18 @@
               <!-- sidebar menu end-->
           </div>
     </aside>
-   
-	<section id="main-content">
 
-	    <section class="wrapper">
-			<center >
-				<h4>手术列表</h4>
+	<section  id="main-content">
+
+		<section class="wrapper">
+			<center width="100%">
+				<h4>白班排班结果</h4>
 				<% if(@surgeries.length > 0) %>
 						<% if(flash[:schedule_notice])%>
 								<font color="red"><%= flash[:schedule_notice] %></font>
 						<% end %>
-						<div style="margin-right:auto;margin-left:auto;">
-							<table class='table table-bordered' >
-							<tbody>
+						<table class='table table-bordered'>
+							<tbody >
 							<tr class="bg-primary">
 								<td>手术日期</td>
 								<td>手术名称</td>
@@ -92,7 +90,8 @@
 								<td>所属专科</td>
 								<td>麻醉方式</td>
 								<td>主治医生</td>
-								
+								<td>器械护士</td>
+								<td>巡回护士</td>
 							</tr>
 							<% for surgery in @surgeries %>
 									<tr>
@@ -109,23 +108,43 @@
 
 										<% doctor = surgery.getDoctor(surgery.doctor_id) %>
 										<td><%= doctor.name %></td>
+
+										<% instrument_nurses = surgery.getNurses(surgery.instrument_nurse_id) %>
+										<% if(instrument_nurses.length == 0) %>
+												<td>无</td>
+										<% else %>
+												<td>
+													<% for name in instrument_nurses %>
+															<%= "#{name} " %>
+													<% end %>
+												</td>
+										<% end %>
+
+										<% roving_nurses = surgery.getNurses(surgery.roving_nurse_id) %>
+										<% if(roving_nurses.length == 0) %>
+												<td>无</td>
+										<% else %>
+												<td>
+													<% for name in roving_nurses %>
+															<%= "#{name} " %>
+													<% end %>
+												</td>
+										<% end %>
 									</tr>
 							<% end %>
 							<p></p>
 							</tbody>
-						    </table>
-						</div>
+						</table>
 						<% date = @surgeries[0].date %>
 						<p></p>
 				<% else %>
 						当前日期无手术
 						<p></p>
 				<% end %>
-				<a href="<%= surgeries_backToIndex_path %>"><button class='btn btn-primary'>返回</button></a>
+					<a href="<%= surgeries_backToIndex_path %>"><button class='btn btn-primary'>返回</button></a>
 			</center>
 
 		</section>
-
 	</section>
 
 
@@ -146,5 +165,9 @@
 <%= javascript_include_tag "gritter-conf.js" %>
 <%= javascript_include_tag "sparkline-chart.js" %>
 <%= javascript_include_tag "zabuto_calendar.js" %>
+
+
+<script type="text/javascript">
+</script>
 
 </html>

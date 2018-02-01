@@ -17,6 +17,7 @@ Rails.application.routes.draw do
   
   get 'schedules/nightSchedule/show', to:"schedules#nightScheduleShow"
   get 'surgeries/surgeriesList', to:"surgeries#surgeriesList" 
+  get 'surgeries/daySchedule/show',to:"surgeries#dayScheduleShow"
 
 
   get 'schedules/test', to:"schedules#test"

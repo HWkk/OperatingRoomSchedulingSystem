@@ -84,6 +84,8 @@ class SchedulesController < ApplicationController
     else
       end_date = (today.year+1).to_s + "-01-01"
     end
+    start_date = "2017-12-01"
+    end_date = "2017-12-31"
     dates = SurgeriesController.new.processDate(start_date, end_date)
     dates.delete_at(dates.length - 1)
     return dates

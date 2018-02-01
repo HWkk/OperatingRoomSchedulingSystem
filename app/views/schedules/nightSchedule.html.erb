@@ -32,14 +32,48 @@
 			<!--logo start-->
 			<a href="/" class="logo"><b>手术室排班系统</b></a>
 			<!--logo end-->
-
 		</header>
-		<section >
+        
+        <aside>
+          <div id="sidebar"  class="nav-collapse ">
+              <!-- sidebar menu start-->
+              <ul class="sidebar-menu" id="nav-accordion">
+
+              	  <h5 class="centered">选择功能</h5>
+              	  	
+                  <li class="mt">
+                      <a  href="/">
+                          <i class="fa fa-dashboard"></i>
+                          <span>排班系统</span>
+                      </a>
+                  </li>
+                  <li >
+                      <a  href="/surgeries/surgeriesList">
+                          <i class="fa fa-desktop"></i>
+                          <span>手术列表</span>
+                      </a>
+                  </li>
+                  <li class="sub-menu">
+                      <a class="active" href="javascript:;" >
+                          <i class="fa fa-desktop"></i>
+                          <span>排班结果</span>
+                      </a>
+                      <ul class="sub">
+                          <li><a  class="acitve" href="/surgeries/daySchedule/show">白班列表</a></li>
+                          <li><a  href="/schedules/nightSchedule/show">夜班列表</a></li>
+                      </ul>
+                  </li>     
+              </ul>
+              <!-- sidebar menu end-->
+          </div>
+        </aside>
+
+		<section id="main-content">
 			<section class = "wrapper">
 
 				<center width = "100%">
 
-					<h3>排班结果</h3>
+					<h4>夜班排班结果</h4>
 
 					<table class='table table-bordered'  width ="100%">
 						<tbody>
