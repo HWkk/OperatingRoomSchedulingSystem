@@ -33,8 +33,6 @@ class SurgeriesController < ApplicationController
     end
   end
 
-
-
   def dayScheduleShow
     today = Time.new
     start_date = (today.year).to_s + "-" + today.month.to_s + "-01"
@@ -79,6 +77,7 @@ class SurgeriesController < ApplicationController
       session[:start_date] = start_date
       session[:end_date] = end_date
       flash[:date_notice] = nil
+      modifyMonthInfoJson(processDayDate(dates))
       @surgeries = selectSurgeries(dates)
       initialClientTableJson(dates)
       initialSurgeriesJson(@surgeries)
@@ -88,6 +87,22 @@ class SurgeriesController < ApplicationController
         render 'surgeries/show'
       end
     end
+  end
+
+  def modifyMonthInfoJson(dates)
+     File.new("./db/json/monthInfo.json", "w").syswrite(JSON.pretty_generate(dates.as_json))
+  end
+
+  def processDayDate(dates)
+    start_date = dates[0].year.to_s + "-" + dates[0].month.to_s + "-01"
+    if(dates[0].month != 12)
+      end_date = dates[0].year.to_s + "-" + (dates[0].month + 1).to_s + "-01"
+    else
+      end_date = (dates[0].year + 1).to_s + "-01-01"
+    end
+    dates = processDate(start_date, end_date)
+    dates.delete_at(dates.length - 1)
+    return dates
   end
 
   def validateDateIsInOneMonth(dates)
