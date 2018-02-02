@@ -79,15 +79,15 @@
                       </a>
                       <ul class="sub">
                            <% if(flash[:day_notice])%>
-                           <li onclick="day_message()">白班列表</li>
+                           <li onclick="day_message()"><a href="">白班列表</a></li>
                            <% else %>
-                           <li>白班列表</li>
+                           <li><a   href="/surgeries/daySchedule/show">白班列表</a></li>
                            <% end %>
                            <% if(flash[:night_notice])%>
-                          <li onclick="night_message()"><a  href="/">夜班列表</a></li>
-                          <% else %>
-                          <li ><a  href="/schedules/nightSchedule/show">夜班列表</a></li>
-                          <% end %>
+                           <li onclick="night_message()"><a  href="">夜班列表</a></li>
+                           <% else %>
+                           <li ><a  href="/schedules/nightSchedule/show">夜班列表</a></li>
+                           <% end %>
 
                       </ul>
                   </li>     
