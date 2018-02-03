@@ -49,3 +49,4 @@ Rails.application.config.assets.precompile += %w( style.css )
 Rails.application.config.assets.precompile += %w( style-responsive.css)
 
 Rails.application.config.assets.precompile += %w( bootstrap.css )
+

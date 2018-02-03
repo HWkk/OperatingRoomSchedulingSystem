@@ -3,7 +3,11 @@ class SchedulesController < ApplicationController
   def test
   end
 
-  
+  def login
+    render 'schedules/login'
+  end
+
+
   def firstShow
     initialJson()
     today = Time.new
