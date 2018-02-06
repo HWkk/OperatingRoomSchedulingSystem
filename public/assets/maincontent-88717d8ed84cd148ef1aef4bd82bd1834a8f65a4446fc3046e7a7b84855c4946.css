@@ -1,0 +1,82 @@
+body {
+	margin:0px;
+	padding:0px;
+	font: 12px Arial,Helvetica, Sans-Serif;
+}
+
+a{
+	text-decoration: none;
+}
+
+div {
+	margin:0px;
+	padding:0px;
+	font-size: 12px;	
+}
+
+h3 {
+	font-size: 14px;
+	font-weight: bold;
+	line-height:10px;
+}
+
+.sysheader{
+	padding: 10px 5px 10px 0px;
+	font-size: 14px;
+	font-weight: normal;
+	margin: 0;
+}
+
+.sysdesc{
+	padding: 10px 5px 10px 0px;
+	margin: 0;
+}
+
+.rowElem{
+	height: 35px;
+	clear:left;
+}
+
+.rowElem label{
+	clear:left;
+	float:left;
+	padding:2px 6px 2px 0px;
+	text-align:left;
+	width:100px;
+}
+
+.rowElem input{
+	display:block;
+	float:left;
+	width:230px;	
+	padding: 5px;
+}
+
+.rowElem select{
+	display:block;
+	width:230px;	
+	padding: 5px;
+}
+
+.rowElem span{
+	float:left;
+	width:85px;
+}
+
+.clear{
+	clear: both;
+}
+
+#headercontent a{
+	text-decoration: none;
+}
+
+.dialogmask{
+	display:none;
+	z-index: 9999;
+	text-align: center;
+	padding-top: 50px;
+}
+ 
+
+
