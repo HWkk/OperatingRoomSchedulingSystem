@@ -10,7 +10,7 @@ class CreateSurgery < ActiveRecord::Migration[5.1]
     	t.string :ward
     	t.string :surgery_name
     	t.string :anesthesia_method
-    	t.intger :doctor_id
+    	t.integer :doctor_id
     	t.string :assistant
     	t.string :instrument_nurse_id
     	t.string :roving_nurse_id
