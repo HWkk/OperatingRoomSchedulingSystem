@@ -78,6 +78,7 @@ class SurgeriesController < ApplicationController
       session[:end_date] = end_date
       flash[:date_notice] = nil
       modifyMonthInfoJson(processDayDate(dates))
+      modifyMonthTableJson(processDayDate(dates))
       @surgeries = selectSurgeries(dates)
       initialClientTableJson(dates)
       initialSurgeriesJson(@surgeries)
@@ -87,6 +88,32 @@ class SurgeriesController < ApplicationController
         render 'surgeries/show'
       end
     end
+  end
+
+  def modifyMonthTableJson(dates)
+    monthTable = {}
+
+    for date in dates
+      ns = NightSchedule.find_by(date: date)
+      array = Array.new
+      array1 = Array.new
+      array2 = Array.new
+      array3 = Array.new
+      array1.push(ns.nurse1_id.to_s)
+      array1.push(ns.nurse2_id.to_s)
+      array1.push(ns.nurse3_id.to_s)
+      array2.push(ns.nurse4_id.to_s)
+      array2.push(ns.nurse5_id.to_s)
+      array2.push(ns.nurse6_id.to_s)
+      array3.push(ns.nurse7_id.to_s)
+      array3.push(ns.nurse8_id.to_s)
+      array3.push(ns.nurse9_id.to_s)
+      array.push(array1)
+      array.push(array2)
+      array.push(array3)
+      monthTable.store(date, array)
+    end
+    File.new("./db/json/monthTable.json", "w").syswrite(JSON.pretty_generate(monthTable.as_json))
   end
 
   def modifyMonthInfoJson(dates)
